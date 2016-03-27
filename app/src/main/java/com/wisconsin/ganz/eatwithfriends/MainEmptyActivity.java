@@ -1,10 +1,10 @@
 package com.wisconsin.ganz.eatwithfriends;
 
+import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class MainEmptyActivity extends AppCompatActivity {
+public class MainEmptyActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,7 +21,7 @@ public class MainEmptyActivity extends AppCompatActivity {
         // back button press from LoginActivity
         // Other alternative is to use android:noHistory="true"
         MainEmptyActivity.this.finish();
-        
+
         startActivity(loginIntent);
 
         // Else
