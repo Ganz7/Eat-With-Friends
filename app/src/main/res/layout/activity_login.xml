@@ -93,7 +93,9 @@
                 android:textColor="@color/offWhite"
                 android:id="@+id/register_text_view"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="30dp" />
+                android:layout_marginTop="30dp"
+                android:clickable="true"
+                android:onClick="onRegisterViewClick"/>
 
         </LinearLayout>
     </ScrollView>
