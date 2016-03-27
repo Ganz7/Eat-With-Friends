@@ -57,6 +57,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
     private UserRegisterTask mAuthTask = null;
 
     // UI references.
+    private TextView mNameView;
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
     private View mProgressView;
@@ -70,6 +71,8 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
 
+        mNameView = (EditText) findViewById(R.id.name);
+
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -82,8 +85,8 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
             }
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
+        Button mEmailRegisterButton = (Button) findViewById(R.id.email_register_button);
+        mEmailRegisterButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 attemptRegister();
