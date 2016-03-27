@@ -15,7 +15,13 @@ public class MainEmptyActivity extends AppCompatActivity {
 
         // If user is not logged in
         // Log them in or register them
-        Intent loginIntent = new Intent(this, LoginActivity.class);
+        Intent loginIntent = new Intent(MainEmptyActivity.this, LoginActivity.class);
+
+        // Call finish on MainEmptyActivity so that it does not become active on
+        // back button press from LoginActivity
+        // Other alternative is to use android:noHistory="true"
+        MainEmptyActivity.this.finish();
+        
         startActivity(loginIntent);
 
         // Else
