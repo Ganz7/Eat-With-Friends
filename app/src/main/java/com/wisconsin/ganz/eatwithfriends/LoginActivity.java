@@ -394,22 +394,30 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         startActivity(registerIntent);
     }
 
+    /**
+     * Gets JSON String response from server and handles an error if there is one.
+     * Or
+     * Adds the user information to shared preferences.
+     * @param response
+     */
     public void processResponse(String response){
         try {
             JSONObject jsonObject = new JSONObject(response);
             if(jsonObject.has("error")){
                 Log.w("URL Process", "There is an error tag!");
+                String errorMessage = "Not able to Sign In. " + jsonObject.getString("error");
+                Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_SHORT).show();
             }
             else{
                 Log.w("URL Process", "No errors!");
-                //SharedPreferences sharedPref = .getPreferences();
                 SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPref.edit();
-                
+
                 editor.putString(getString(R.string.preferences_user_email), jsonObject.getString("user_email"));
                 editor.putString(getString(R.string.preferences_user_name), jsonObject.getString("user_name"));
                 editor.putBoolean(getString(R.string.preferences_user_logged_in), true);
-                editor.commit();
+
+                editor.apply(); //Delegate commit task to background process
             }
 
         } catch (JSONException e) {
