@@ -358,7 +358,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
 
             // If response code is not 2xx or if something else wen't wrong.
-            String jsonErrorResponse = "{\"error\":\"Something wen't wrong. Try again.\"";
+            String jsonErrorResponse = "{\"error\":\"Something wen't wrong. Try again.\"}";
             return jsonErrorResponse;
         }
 

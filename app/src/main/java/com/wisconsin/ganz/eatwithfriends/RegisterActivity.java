@@ -152,10 +152,12 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         }
 
         // Reset errors.
+        mNameView.setError(null);
         mEmailView.setError(null);
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
+        String name = mNameView.getText().toString();
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
 
@@ -180,6 +182,13 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
             cancel = true;
         }
 
+        // Check if name field has a value
+        if(TextUtils.isEmpty(name)){
+            mNameView.setError(getString(R.string.error_field_required));
+            cancel = true;
+            focusView = mNameView;
+        }
+
         if (cancel) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
@@ -188,7 +197,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserRegisterTask(email, password);
+            mAuthTask = new UserRegisterTask(name, email, password);
             mAuthTask.execute((Void) null);
         }
     }
@@ -297,10 +306,12 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
      */
     public class UserRegisterTask extends AsyncTask<Void, Void, Boolean> {
 
+        private final String mName;
         private final String mEmail;
         private final String mPassword;
 
-        UserRegisterTask(String email, String password) {
+        UserRegisterTask(String name, String email, String password) {
+            mName = name;
             mEmail = email;
             mPassword = password;
         }
