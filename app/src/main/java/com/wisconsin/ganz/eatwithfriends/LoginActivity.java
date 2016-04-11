@@ -4,9 +4,11 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.LoaderManager.LoaderCallbacks;
+import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -19,6 +21,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,6 +32,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -325,15 +331,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 urlBuilder.append("&user_password=");
                 urlBuilder.append(mPassword);
 
-                Toast.makeText(getApplicationContext(), "URL: "+urlBuilder.toString(), Toast.LENGTH_LONG).show();
+                Log.w("URL", urlBuilder.toString());
                 URL url = new URL(urlBuilder.toString());
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
-                urlConnection.setRequestProperty("Content-length", "0");
                 urlConnection.setUseCaches(false);
-                urlConnection.setConnectTimeout(6000);
-                urlConnection.setReadTimeout(6000);
-                urlConnection.connect();
+                urlConnection.setConnectTimeout(20000);
+                urlConnection.setReadTimeout(20000);
 
                 if (urlConnection.getResponseCode() == 200 || urlConnection.getResponseCode() == 201) {
                     BufferedReader br = new BufferedReader(new InputStreamReader
@@ -344,17 +348,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         sb.append(line + "\n");
                     }
                     br.close();
+                    processResponse(sb.toString());
+                    Log.w("URL", "Response:" + sb.toString());
                     return true;
                 }
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (ProtocolException e) {
+            } catch (MalformedURLException | ProtocolException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            // TODO: register the new account here.
-            return true;
+
+            return false;
         }
 
         @Override
@@ -364,7 +368,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             if (success) {
                 Toast.makeText(getApplicationContext(), "Success!", Toast.LENGTH_LONG).show();
-                finish();
+                //finish();
                 // Call Main Activity from here
 
             } else {
@@ -388,6 +392,30 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     public void onRegisterViewClick(View v){
         Intent registerIntent = new Intent(this, RegisterActivity.class);
         startActivity(registerIntent);
+    }
+
+    public void processResponse(String response){
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            if(jsonObject.has("error")){
+                Log.w("URL Process", "There is an error tag!");
+            }
+            else{
+                Log.w("URL Process", "No errors!");
+                //SharedPreferences sharedPref = .getPreferences();
+                SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                
+                editor.putString(getString(R.string.preferences_user_email), jsonObject.getString("user_email"));
+                editor.putString(getString(R.string.preferences_user_name), jsonObject.getString("user_name"));
+                editor.putBoolean(getString(R.string.preferences_user_logged_in), true);
+                editor.commit();
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
     }
 }
 
