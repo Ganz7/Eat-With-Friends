@@ -312,7 +312,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+    public class UserLoginTask extends AsyncTask<Void, Void, String> {
 
         private final String mEmail;
         private final String mPassword;
@@ -323,7 +323,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
 
         @Override
-        protected Boolean doInBackground(Void... params) {
+        protected String doInBackground(Void... params) {
             try {
                 StringBuilder urlBuilder = new StringBuilder(HOST_NAME);
                 urlBuilder.append("/authentication?user_email=");
@@ -348,9 +348,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         sb.append(line + "\n");
                     }
                     br.close();
-                    processResponse(sb.toString());
                     Log.w("URL", "Response:" + sb.toString());
-                    return true;
+                    return sb.toString();
                 }
             } catch (MalformedURLException | ProtocolException e) {
                 e.printStackTrace();
@@ -358,23 +357,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 e.printStackTrace();
             }
 
-            return false;
+            // If response code is not 2xx or if something else wen't wrong.
+            String jsonErrorResponse = "{\"error\":\"Something wen't wrong. Try again.\"";
+            return jsonErrorResponse;
         }
 
         @Override
-        protected void onPostExecute(final Boolean success) {
+        protected void onPostExecute(final String response) {
             mAuthTask = null;
             showProgress(false);
-
-            if (success) {
-                Toast.makeText(getApplicationContext(), "Success!", Toast.LENGTH_LONG).show();
-                //finish();
-                // Call Main Activity from here
-
-            } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
-            }
+            processResponse(response);
+            //mPasswordView.setError(getString(R.string.error_incorrect_password));
+            //mPasswordView.requestFocus();
         }
 
         @Override
@@ -396,18 +390,22 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     /**
      * Gets JSON String response from server and handles an error if there is one.
-     * Or
-     * Adds the user information to shared preferences.
+     * or adds the user information to shared preferences.
+     *
+     * Also displays relevant info to the user and starts the homescreen activity
      * @param response
      */
     public void processResponse(String response){
         try {
             JSONObject jsonObject = new JSONObject(response);
+            // If there was some issue with the log in process
             if(jsonObject.has("error")){
                 Log.w("URL Process", "There is an error tag!");
                 String errorMessage = "Not able to Sign In. " + jsonObject.getString("error");
                 Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_SHORT).show();
             }
+
+            // Store user info to shared preferences in private mode
             else{
                 Log.w("URL Process", "No errors!");
                 SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
@@ -418,12 +416,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 editor.putBoolean(getString(R.string.preferences_user_logged_in), true);
 
                 editor.apply(); //Delegate commit task to background process
+
+                Toast.makeText(getApplicationContext(), "Login Success!", Toast.LENGTH_SHORT).show();
             }
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
     }
 }
 
