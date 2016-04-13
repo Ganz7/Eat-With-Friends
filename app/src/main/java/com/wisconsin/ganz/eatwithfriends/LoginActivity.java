@@ -56,7 +56,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     // Id to identity READ_CONTACTS permission request.
     private static final int REQUEST_READ_CONTACTS = 0;
     // Remote back-end URI
-    public static final String HOST_NAME = "https://wisc-eatwithfriends.herokuapp.com";
+    public static final String HOST_NAME = "wisc-eatwithfriends.herokuapp.com";
 
     /**
      * A dummy authentication store containing known user names and passwords.
@@ -368,9 +368,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected void onPostExecute(final String response) {
             mAuthTask = null;
-            processResponse(response);
+            boolean isSuccess = processResponse(response);
             showProgress(false);
 
+            if(isSuccess) {
+                Intent homeIntent = new Intent(LoginActivity.this, HomeActivity.class);
+                /* Call finish on LoginActivity so that it does not become active on
+                 * back button press from HomeActivity
+                 */
+                LoginActivity.this.finish();
+                startActivity(homeIntent);
+            }
             //mPasswordView.setError(getString(R.string.error_incorrect_password));
             //mPasswordView.requestFocus();
         }
@@ -399,7 +407,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Also displays relevant info to the user and starts the homescreen activity
      * @param response
      */
-    public void processResponse(String response){
+    public boolean processResponse(String response){
         try {
             JSONObject jsonObject = new JSONObject(response);
             // If there was some issue with the log in process
@@ -407,26 +415,35 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 Log.w("URL Process", "There is an error tag!");
                 String errorMessage = "Not able to Sign In. " + jsonObject.getString("error");
                 Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                return false;
             }
 
             // Store user info to shared preferences in private mode
             else{
                 Log.w("URL Process", "No errors!");
-                SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+                SharedPreferences sharedPref = getApplicationContext().
+                        getSharedPreferences(getString(R.string.preferences_file_name), Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPref.edit();
 
+                editor.clear();
                 editor.putString(getString(R.string.preferences_user_email), jsonObject.getString("user_email"));
                 editor.putString(getString(R.string.preferences_user_name), jsonObject.getString("user_name"));
                 editor.putBoolean(getString(R.string.preferences_user_logged_in), true);
 
-                editor.apply(); //Delegate commit task to background process
+                //editor.apply(); //Delegate commit task to background process
+                editor.commit();
+
+                Log.w("Shared Pref", "Written to it "+sharedPref.getBoolean(getString(R.string.preferences_user_logged_in), false));
 
                 Toast.makeText(getApplicationContext(), "Login Success!", Toast.LENGTH_SHORT).show();
+                return true;
             }
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        return false;
     }
 }
 
