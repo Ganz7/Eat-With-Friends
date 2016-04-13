@@ -20,4 +20,10 @@
     <string name="preferences_user_name">pref_user_name</string>
     <string name="preferences_user_email">pref_user_email</string>
     <string name="preferences_user_logged_in">pref_user_logged_in</string>
+    <string name="title_activity_home">Feed</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
 </resources>
