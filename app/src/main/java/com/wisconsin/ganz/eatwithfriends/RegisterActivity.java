@@ -3,6 +3,8 @@ package com.wisconsin.ganz.eatwithfriends;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -19,6 +21,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -28,7 +31,18 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +57,9 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
      * Id to identity READ_CONTACTS permission request.
      */
     private static final int REQUEST_READ_CONTACTS = 0;
+
+    // Remote back-end URI
+    public static final String HOST_NAME = "https://wisc-eatwithfriends.herokuapp.com";
 
     /**
      * A dummy authentication store containing known user names and passwords.
@@ -157,9 +174,9 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String name = mNameView.getText().toString();
-        String email = mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
+        String name = mNameView.getText().toString().trim();
+        String email = mEmailView.getText().toString().trim();
+        String password = mPasswordView.getText().toString().trim();
 
         boolean cancel = false;
         View focusView = null;
@@ -304,7 +321,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    public class UserRegisterTask extends AsyncTask<Void, Void, Boolean> {
+    public class UserRegisterTask extends AsyncTask<Void, Void, String> {
 
         private final String mName;
         private final String mEmail;
@@ -317,45 +334,97 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         }
 
         @Override
-        protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-
+        protected String doInBackground(Void... params) {
             try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
+                //Replace this with a URI Builder when you have time
+                StringBuilder urlBuilder = new StringBuilder(HOST_NAME);
+                urlBuilder.append("/signup?user_name=");
+                urlBuilder.append(mName);
+                urlBuilder.append("&user_email=");
+                urlBuilder.append(mEmail);
+                urlBuilder.append("&user_password=");
+                urlBuilder.append(mPassword);
 
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
+                Log.w("URL", urlBuilder.toString());
+                URL url = new URL(urlBuilder.toString());
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.setUseCaches(false);
+                urlConnection.setConnectTimeout(20000);
+                urlConnection.setReadTimeout(20000);
+
+                if (urlConnection.getResponseCode() == 200 || urlConnection.getResponseCode() == 201) {
+                    BufferedReader br = new BufferedReader(new InputStreamReader
+                            (urlConnection.getInputStream()));
+                    StringBuilder sb = new StringBuilder();
+                    String line;
+                    while ((line = br.readLine()) != null) {
+                        sb.append(line + "\n");
+                    }
+                    br.close();
+                    Log.w("URL", "Response:" + sb.toString());
+                    return sb.toString();
                 }
+            } catch (MalformedURLException | ProtocolException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
 
-            // TODO: register the new account here.
-            return true;
+            // If response code is not 2xx or if something else wen't wrong.
+            String jsonErrorResponse = "{\"error\":\"Something wen't wrong. Try again.\"}";
+            return jsonErrorResponse;
         }
 
         @Override
-        protected void onPostExecute(final Boolean success) {
+        protected void onPostExecute(final String response) {
             mAuthTask = null;
             showProgress(false);
 
-            if (success) {
-                finish();
-            } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
-            }
+
         }
 
         @Override
         protected void onCancelled() {
             mAuthTask = null;
             showProgress(false);
+        }
+    }
+    /**
+     * Gets JSON String response from server and handles an error if there is one.
+     * or adds the newly signed up user information to shared preferences.
+     *
+     * Also displays relevant info to the user and starts the homescreen activity
+     * @param response
+     */
+    public void processResponse(String response){
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            // If there was some issue with the log in process
+            if(jsonObject.has("error")){
+                Log.w("URL Process", "There is an error tag!");
+                String errorMessage = "Not able to Register. " + jsonObject.getString("error");
+                Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_SHORT).show();
+            }
+
+            // Store user info to shared preferences in private mode
+            else{
+                Log.w("URL Process", "No errors!");
+                SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref.edit();
+
+                //replace this with string
+                editor.putString(getString(R.string.preferences_user_email), jsonObject.getString("user_email"));
+                editor.putString(getString(R.string.preferences_user_name), jsonObject.getString("user_name"));
+                editor.putBoolean(getString(R.string.preferences_user_logged_in), true);
+
+                editor.apply(); //Delegate commit task to background process
+
+                Toast.makeText(getApplicationContext(), "Signup Success!", Toast.LENGTH_SHORT).show();
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 }
