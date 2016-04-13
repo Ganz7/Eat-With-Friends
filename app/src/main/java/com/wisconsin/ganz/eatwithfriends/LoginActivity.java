@@ -325,14 +325,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected String doInBackground(Void... params) {
             try {
-                StringBuilder urlBuilder = new StringBuilder(HOST_NAME);
-                urlBuilder.append("/authentication?user_email=");
-                urlBuilder.append(mEmail);
-                urlBuilder.append("&user_password=");
-                urlBuilder.append(mPassword);
+                Uri uri = new Uri.Builder()
+                        .scheme("https")
+                        .authority(HOST_NAME)
+                        .path("authentication")
+                        .appendQueryParameter("user_email", mEmail)
+                        .appendQueryParameter("user_password", mPassword)
+                        .build();
 
-                Log.w("URL", urlBuilder.toString());
-                URL url = new URL(urlBuilder.toString());
+                URL url = new URL(uri.toString());
+                Log.w("URI", uri.toString());
+                
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
                 urlConnection.setUseCaches(false);
@@ -365,8 +368,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected void onPostExecute(final String response) {
             mAuthTask = null;
-            showProgress(false);
             processResponse(response);
+            showProgress(false);
+
             //mPasswordView.setError(getString(R.string.error_incorrect_password));
             //mPasswordView.requestFocus();
         }

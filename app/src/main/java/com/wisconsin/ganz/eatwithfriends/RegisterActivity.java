@@ -3,23 +3,21 @@ package com.wisconsin.ganz.eatwithfriends;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
-
+import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Loader;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
-
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -59,7 +57,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
     private static final int REQUEST_READ_CONTACTS = 0;
 
     // Remote back-end URI
-    public static final String HOST_NAME = "https://wisc-eatwithfriends.herokuapp.com";
+    public static final String HOST_NAME = "wisc-eatwithfriends.herokuapp.com";
 
     /**
      * A dummy authentication store containing known user names and passwords.
@@ -336,17 +334,18 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         @Override
         protected String doInBackground(Void... params) {
             try {
-                //Replace this with a URI Builder when you have time
-                StringBuilder urlBuilder = new StringBuilder(HOST_NAME);
-                urlBuilder.append("/signup?user_name=");
-                urlBuilder.append(mName);
-                urlBuilder.append("&user_email=");
-                urlBuilder.append(mEmail);
-                urlBuilder.append("&user_password=");
-                urlBuilder.append(mPassword);
+                Uri uri = new Uri.Builder()
+                        .scheme("https")
+                        .authority(HOST_NAME)
+                        .path("signup")
+                        .appendQueryParameter("user_name", mName)
+                        .appendQueryParameter("user_email", mEmail)
+                        .appendQueryParameter("user_password", mPassword)
+                        .build();
 
-                Log.w("URL", urlBuilder.toString());
-                URL url = new URL(urlBuilder.toString());
+                URL url = new URL(uri.toString());
+                Log.w("URI", uri.toString());
+
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
                 urlConnection.setUseCaches(false);
@@ -379,9 +378,8 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         @Override
         protected void onPostExecute(final String response) {
             mAuthTask = null;
+            processResponse(response);
             showProgress(false);
-
-
         }
 
         @Override
