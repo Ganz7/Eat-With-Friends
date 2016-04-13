@@ -408,7 +408,8 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
             // Store user info to shared preferences in private mode
             else{
                 Log.w("URL Process", "No errors!");
-                SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+                SharedPreferences sharedPref = getApplicationContext().
+                        getSharedPreferences(getString(R.string.preferences_file_name), Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPref.edit();
 
                 //replace this with string
@@ -416,7 +417,8 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
                 editor.putString(getString(R.string.preferences_user_name), jsonObject.getString("user_name"));
                 editor.putBoolean(getString(R.string.preferences_user_logged_in), true);
 
-                editor.apply(); //Delegate commit task to background process
+                //editor.apply(); //Delegate commit task to background process
+                editor.commit();
 
                 Toast.makeText(getApplicationContext(), "Signup Success!", Toast.LENGTH_SHORT).show();
             }
