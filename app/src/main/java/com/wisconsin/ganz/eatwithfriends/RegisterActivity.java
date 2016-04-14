@@ -282,12 +282,13 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         List<String> emails = new ArrayList<>();
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            emails.add(cursor.getString(ProfileQuery.ADDRESS));
-            cursor.moveToNext();
+        if(cursor != null) {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                emails.add(cursor.getString(ProfileQuery.ADDRESS));
+                cursor.moveToNext();
+            }
         }
-
         addEmailsToAutoComplete(emails);
     }
 
