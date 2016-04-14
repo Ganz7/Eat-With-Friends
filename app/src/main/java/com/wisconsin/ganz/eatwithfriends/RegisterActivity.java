@@ -6,6 +6,7 @@ import android.annotation.TargetApi;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Context;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -378,8 +379,20 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         @Override
         protected void onPostExecute(final String response) {
             mAuthTask = null;
-            processResponse(response);
+            boolean isSuccess = processResponse(response);
             showProgress(false);
+
+            if(isSuccess) {
+                Intent homeIntent = new Intent(RegisterActivity.this, HomeActivity.class);
+                /* Call finish on LoginActivity so that it does not become active on
+                 * back button press from HomeActivity
+                 */
+                RegisterActivity.this.finish();
+
+                // Clear the entire stack
+                homeIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(homeIntent);
+            }
         }
 
         @Override
@@ -395,7 +408,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
      * Also displays relevant info to the user and starts the homescreen activity
      * @param response
      */
-    public void processResponse(String response){
+    public boolean processResponse(String response){
         try {
             JSONObject jsonObject = new JSONObject(response);
             // If there was some issue with the log in process
@@ -403,6 +416,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
                 Log.w("URL Process", "There is an error tag!");
                 String errorMessage = "Not able to Register. " + jsonObject.getString("error");
                 Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                return false;
             }
 
             // Store user info to shared preferences in private mode
@@ -421,11 +435,14 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
                 editor.commit();
 
                 Toast.makeText(getApplicationContext(), "Signup Success!", Toast.LENGTH_SHORT).show();
+                return true;
             }
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        return false;
     }
 }
 
