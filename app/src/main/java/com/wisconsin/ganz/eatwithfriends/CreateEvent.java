@@ -16,10 +16,13 @@ public class CreateEvent extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        setTodaysDate();
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                processClick();
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
@@ -27,4 +30,17 @@ public class CreateEvent extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
+    /**
+     * Process user request to create a new event
+     */
+    private void processClick(){
+
+    }
+
+    /**
+     * Set the Date Picker EditText to the day's date
+     */
+    private void setTodaysDate(){
+
+    }
 }

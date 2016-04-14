@@ -12,17 +12,20 @@
     tools:context="com.wisconsin.ganz.eatwithfriends.CreateEvent"
     tools:showIn="@layout/activity_create_event">
 
+    <ImageView
+        android:layout_width="30sp"
+        android:layout_height="wrap_content"
+        android:id="@+id/iv_location"
+        android:src="@drawable/ic_location_on_black_36dp"
+        android:layout_alignParentStart="true" />
+
     <EditText
         android:layout_width="match_parent"
-        android:layout_height="60sp"
-        android:textSize="20sp"
+        android:layout_height="45sp"
         android:id="@+id/et_location"
         android:layout_alignParentTop="true"
-        android:hint="Where are you eating?"
-        android:textColorHighlight="#333333"
-        android:textColorHint="#333333"
-        android:drawableLeft="@drawable/ic_location_on_black_36dp"
-        android:drawablePadding="18sp" />
+        android:layout_toRightOf="@+id/iv_location"
+        android:hint="Where are you eating?" />
 
     <EditText
         android:layout_width="match_parent"
@@ -32,7 +35,6 @@
         android:id="@+id/et_date"
         android:layout_below="@+id/et_location"
         android:hint="Choose date"
-        android:textColorHint="#333333"
         android:layout_marginTop="5sp"/>
 
     <EditText
@@ -42,16 +44,36 @@
         android:ems="10"
         android:id="@+id/et_start_time"
         android:layout_below="@+id/et_date"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:hint="Start Time"/>
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="time"
         android:ems="10"
-        android:id="@+id/editText3"
+        android:id="@+id/et_end_time"
         android:layout_below="@+id/et_start_time"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:hint="End Time"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Description"
+        android:textSize="18sp"
+        android:id="@+id/textView_description"
+        android:layout_below="@+id/et_end_time"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="10dp"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine"
+        android:id="@+id/editText_description"
+        android:layout_below="@+id/textView_description"
+        android:layout_alignParentStart="true"/>
 
 
 </RelativeLayout>

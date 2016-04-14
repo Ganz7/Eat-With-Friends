@@ -53,7 +53,8 @@
                     android:maxLines="1"
                     android:singleLine="true"
                     android:textColor="@color/offWhite"
-                    android:textColorHint="@color/offoffWhite"/>
+                    android:textColorHint="@color/offoffWhite"
+                    android:textColorHighlight="@color/offoffWhite"/>
 
             </android.support.design.widget.TextInputLayout>
 
