@@ -1,5 +1,8 @@
 package com.wisconsin.ganz.eatwithfriends;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -12,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -88,10 +92,25 @@ public class HomeActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_manage) {
 
-        } else if (id == R.id.nav_share) {
+        } else if (id == R.id.nav_logout) {
+            SharedPreferences sharedPref = getApplicationContext().
+                    getSharedPreferences(getString(R.string.preferences_file_name), Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
 
-        } else if (id == R.id.nav_send) {
+            // Change User Details in preferences
+            editor.putString(getString(R.string.preferences_user_email), "");
+            editor.putString(getString(R.string.preferences_user_name), "");
+            editor.putBoolean(getString(R.string.preferences_user_logged_in), false);
 
+            editor.commit();
+
+            Toast.makeText(getApplicationContext(), "You are logged out", Toast.LENGTH_SHORT).show();
+
+            Intent loginIntent = new Intent(HomeActivity.this, LoginActivity.class);
+
+            // Clear the entire stack
+            loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(loginIntent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
