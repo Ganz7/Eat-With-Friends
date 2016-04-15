@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Eat With Friends</string>
     <string name="title_activity_login">Log In</string>
+    <string name="host_name">wisc-eatwithfriends.herokuapp.com</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>

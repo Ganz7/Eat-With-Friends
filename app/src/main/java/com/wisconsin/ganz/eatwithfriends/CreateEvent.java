@@ -1,6 +1,10 @@
 package com.wisconsin.ganz.eatwithfriends;
 
 import android.app.TimePickerDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +15,13 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -23,6 +34,9 @@ public class CreateEvent extends AppCompatActivity {
     private EditText et_start_time;
     private EditText et_end_time;
     private EditText et_info;
+
+    // Keep Track of Server Add Task
+    private ServerAddTask mAddTask = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,8 +121,8 @@ public class CreateEvent extends AppCompatActivity {
             return;
         }
 
-        String startDateString = et_date + " " + et_start_time;
-        String endDateString = et_date + " " + et_end_time;
+        String startDateString = date + " " + start_time;
+        String endDateString = date + " " + end_time;
 
         SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm"); //Custom time format
 
@@ -137,6 +151,14 @@ public class CreateEvent extends AppCompatActivity {
      *
      */
     private void addEvent(String location, String date, String start_time, String end_time, String info){
+        if(mAddTask != null){
+            Toast.makeText(this, "Adding already in progress. Please wait.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        mAddTask = new ServerAddTask(location, date, start_time, end_time, info);
+        mAddTask.execute((Void) null);
+
 
     }
 
@@ -145,5 +167,95 @@ public class CreateEvent extends AppCompatActivity {
      */
     private void setTodaysDate(){
         //TODO
+    }
+
+    /**
+     * Represents an asynchronous login/registration task used to authenticate
+     * the user.
+     */
+    public class ServerAddTask extends AsyncTask<Void, Void, String> {
+
+        private final String mLocation;
+        private final String mDate;
+        private final String mStartTime;
+        private final String mEndTime;
+        private final String mInfo;
+        private final String mUserEmail;
+
+        ServerAddTask(String location, String date, String start_time, String end_time, String info) {
+            mLocation = location;
+            mDate = date;
+            mStartTime = start_time;
+            mEndTime = end_time;
+            mInfo = info;
+
+            SharedPreferences sharedPref = getApplicationContext().
+                    getSharedPreferences(getString(R.string.preferences_file_name), Context.MODE_PRIVATE);
+            mUserEmail = sharedPref.getString(getString(R.string.preferences_user_email), "");
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            try {
+                Uri uri = new Uri.Builder()
+                        .scheme("https")
+                        .authority(getString(R.string.host_name))
+                        .path("create/event")
+                        .appendQueryParameter("user_email", mUserEmail)
+                        .appendQueryParameter("event_location", mLocation)
+                        .appendQueryParameter("event_date", mDate)
+                        .appendQueryParameter("event_startTime", mStartTime)
+                        .appendQueryParameter("event_endTime", mEndTime)
+                        .appendQueryParameter("event_info", mInfo)
+                        .build();
+
+                URL url = new URL(uri.toString());
+                Log.w("URI", uri.toString());
+
+
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.setUseCaches(false);
+                urlConnection.setConnectTimeout(20000);
+                urlConnection.setReadTimeout(20000);
+
+                if (urlConnection.getResponseCode() == 200 || urlConnection.getResponseCode() == 201) {
+                    BufferedReader br = new BufferedReader(new InputStreamReader
+                            (urlConnection.getInputStream()));
+                    StringBuilder sb = new StringBuilder();
+                    String line;
+                    while ((line = br.readLine()) != null) {
+                        sb.append(line + "\n");
+                    }
+                    br.close();
+                    Log.w("URL", "Response:" + sb.toString());
+                    return sb.toString();
+                }
+            } catch (MalformedURLException | ProtocolException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            // If response code is not 2xx or if something else went wrong.
+            String jsonErrorResponse = "{\"error\":\"Something wen't wrong. Try again.\"}";
+            return jsonErrorResponse;
+        }
+
+        @Override
+        protected void onPostExecute(final String response) {
+            mAddTask = null;
+            //boolean isSuccess = processResponse(response);
+            boolean isSuccess = true;
+
+            if(isSuccess) {
+
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            mAddTask = null;
+        }
     }
 }
