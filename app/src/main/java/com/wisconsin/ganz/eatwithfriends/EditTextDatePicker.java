@@ -39,5 +39,13 @@ public class EditTextDatePicker implements View.OnClickListener, DatePickerDialo
         this.year = year;
         this.month = monthOfYear;
         this.day = dayOfMonth;
+
+        updateEditText();
+    }
+
+    private void updateEditText(){
+        StringBuilder date = new StringBuilder();
+        date.append(month+1).append("/").append(day).append("/").append(year).append(" ");
+        editText.setText(date);
     }
 }
