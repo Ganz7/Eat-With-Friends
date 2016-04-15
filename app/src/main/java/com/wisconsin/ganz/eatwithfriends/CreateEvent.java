@@ -26,14 +26,13 @@ public class CreateEvent extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        initializeAndSetListeners();
-        setTodaysDate();
+        initializeViewsAndSetListeners();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                processClick();
+                processSubmit();
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -43,7 +42,7 @@ public class CreateEvent extends AppCompatActivity {
      * Initialize all the UI Elements and set the Date and Time picker listeners
      * for the relevant elements.
      */
-    private void initializeAndSetListeners(){
+    private void initializeViewsAndSetListeners(){
         et_location = (EditText) findViewById(R.id.et_location);
         et_date = (EditText) findViewById(R.id.et_date);
         et_start_time = (EditText) findViewById(R.id.et_start_time);
@@ -70,7 +69,7 @@ public class CreateEvent extends AppCompatActivity {
                 int minute = currentTime.get(Calendar.MINUTE);
 
                 TimePickerDialog mTimePicker;
-                //Display a 24-hour format timepicker dialog and set the edit text on selection
+                //Display a 24-hour format TimePickerDialog and set the edit text on selection
                 mTimePicker = new TimePickerDialog(CreateEvent.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
@@ -87,7 +86,7 @@ public class CreateEvent extends AppCompatActivity {
     /**
      * Process user request to create a new event
      */
-    private void processClick(){
+    private void processSubmit(){
 
     }
 

@@ -35,7 +35,8 @@
         android:id="@+id/et_date"
         android:layout_below="@+id/et_location"
         android:hint="Choose date"
-        android:layout_marginTop="5sp"/>
+        android:layout_marginTop="5sp"
+        android:focusable="false"/>
 
     <EditText
         android:layout_width="match_parent"
@@ -45,7 +46,8 @@
         android:id="@+id/et_start_time"
         android:layout_below="@+id/et_date"
         android:layout_alignParentStart="true"
-        android:hint="Start Time"/>
+        android:hint="Start Time"
+        android:focusable="false"/>
 
     <EditText
         android:layout_width="match_parent"
@@ -55,7 +57,8 @@
         android:id="@+id/et_end_time"
         android:layout_below="@+id/et_start_time"
         android:layout_alignParentStart="true"
-        android:hint="End Time"/>
+        android:hint="End Time"
+        android:focusable="false"/>
 
     <TextView
         android:layout_width="match_parent"
