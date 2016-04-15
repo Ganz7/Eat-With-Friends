@@ -60,9 +60,9 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Description"
-        android:textSize="18sp"
-        android:id="@+id/textView_description"
+        android:text="Additional Information"
+        android:textSize="15sp"
+        android:id="@+id/tv_info"
         android:layout_below="@+id/et_end_time"
         android:layout_alignParentStart="true"
         android:layout_marginTop="10dp"/>
@@ -71,8 +71,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textMultiLine"
-        android:id="@+id/editText_description"
-        android:layout_below="@+id/textView_description"
+        android:id="@+id/et_info"
+        android:layout_below="@+id/tv_info"
         android:layout_alignParentStart="true"/>
 
 
