@@ -15,6 +15,9 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -170,6 +173,36 @@ public class CreateEvent extends AppCompatActivity {
     }
 
     /**
+     * Gets JSON String response from server and handles an error if there is one.
+     * if not...
+     *
+     * @param response (JSON String from the server)
+     */
+    public boolean processResponse(String response){
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            // If there was some issue with the log in process
+            if(jsonObject.has("error")){
+                Log.w("URL Process", "There is an error tag!");
+                String errorMessage = "Not able to add event. " + jsonObject.getString("error");
+                Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                return false;
+            }
+
+            // Event successfully created
+            else{
+                Toast.makeText(getApplicationContext(), "Event Successfully Created!", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
@@ -245,11 +278,11 @@ public class CreateEvent extends AppCompatActivity {
         @Override
         protected void onPostExecute(final String response) {
             mAddTask = null;
-            //boolean isSuccess = processResponse(response);
-            boolean isSuccess = true;
-
+            boolean isSuccess = processResponse(response);
             if(isSuccess) {
-
+                // Finish up here
+                // Update feed?
+                // Make feed refresh?
             }
         }
 
