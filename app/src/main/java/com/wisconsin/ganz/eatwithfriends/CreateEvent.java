@@ -29,6 +29,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 public class CreateEvent extends AppCompatActivity {
 
@@ -127,13 +128,14 @@ public class CreateEvent extends AppCompatActivity {
         String startDateString = date + " " + start_time;
         String endDateString = date + " " + end_time;
 
-        SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm"); //Custom time format
+        SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm"); //Custom time format
+        formatter.setTimeZone(TimeZone.getDefault()); // Set timezone to device's
 
         Date startDate = null;
         Date endDate = null;
         try {
-            startDate = format.parse(startDateString);
-            endDate = format.parse(endDateString);
+            startDate = formatter.parse(startDateString);
+            endDate = formatter.parse(endDateString);
         } catch (ParseException e) {
             Log.e("Parse Exception", "Error : "+e.getMessage());
         }
@@ -147,7 +149,12 @@ public class CreateEvent extends AppCompatActivity {
             return;
         }
 
-        addEvent(location, date, start_time, end_time, info);
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+        String f_start_time = formatter.format(startDate);
+        String f_end_time = formatter.format(endDate);
+
+        addEvent(location, date, f_start_time, f_end_time, info);
     }
 
     /**
@@ -159,9 +166,8 @@ public class CreateEvent extends AppCompatActivity {
             return;
         }
 
-        mAddTask = new ServerAddTask(location, date, start_time, end_time, info);
+        mAddTask = new ServerAddTask(location, start_time, end_time, info);
         mAddTask.execute((Void) null);
-
 
     }
 
@@ -279,7 +285,8 @@ public class CreateEvent extends AppCompatActivity {
             if(isSuccess) {
                 // Finish up here
                 // Update feed?
-                // Make feed refresh?m
+                // Make feed refresh?
+                finish();
             }
         }
 
