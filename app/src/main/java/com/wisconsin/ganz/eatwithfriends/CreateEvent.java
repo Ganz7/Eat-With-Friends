@@ -209,15 +209,13 @@ public class CreateEvent extends AppCompatActivity {
     public class ServerAddTask extends AsyncTask<Void, Void, String> {
 
         private final String mLocation;
-        private final String mDate;
         private final String mStartTime;
         private final String mEndTime;
         private final String mInfo;
         private final String mUserEmail;
 
-        ServerAddTask(String location, String date, String start_time, String end_time, String info) {
+        ServerAddTask(String location, String start_time, String end_time, String info) {
             mLocation = location;
-            mDate = date;
             mStartTime = start_time;
             mEndTime = end_time;
             mInfo = info;
@@ -236,9 +234,8 @@ public class CreateEvent extends AppCompatActivity {
                         .path("create/event")
                         .appendQueryParameter("user_email", mUserEmail)
                         .appendQueryParameter("event_location", mLocation)
-                        .appendQueryParameter("event_date", mDate)
-                        .appendQueryParameter("event_startTime", mStartTime)
-                        .appendQueryParameter("event_endTime", mEndTime)
+                        .appendQueryParameter("event_start_time", mStartTime)
+                        .appendQueryParameter("event_end_time", mEndTime)
                         .appendQueryParameter("event_info", mInfo)
                         .build();
 
@@ -282,7 +279,7 @@ public class CreateEvent extends AppCompatActivity {
             if(isSuccess) {
                 // Finish up here
                 // Update feed?
-                // Make feed refresh?
+                // Make feed refresh?m
             }
         }
 
