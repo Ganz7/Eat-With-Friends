@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -42,6 +43,9 @@ public class CreateEvent extends AppCompatActivity {
     // Keep Track of Server Add Task
     private ServerAddTask mAddTask = null;
 
+    // For progress bar
+    private ProgressBar mProgress;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +75,8 @@ public class CreateEvent extends AppCompatActivity {
         et_start_time = (EditText) findViewById(R.id.et_start_time);
         et_end_time = (EditText) findViewById(R.id.et_end_time);
         et_info = (EditText) findViewById(R.id.et_info);
+
+        mProgress = (ProgressBar) findViewById(R.id.progressBar);
 
         setTodaysDate();
 
@@ -166,6 +172,7 @@ public class CreateEvent extends AppCompatActivity {
             return;
         }
 
+        mProgress.setVisibility(View.VISIBLE);
         mAddTask = new ServerAddTask(location, start_time, end_time, info);
         mAddTask.execute((Void) null);
 
@@ -282,6 +289,7 @@ public class CreateEvent extends AppCompatActivity {
         protected void onPostExecute(final String response) {
             mAddTask = null;
             boolean isSuccess = processResponse(response);
+            mProgress.setVisibility(View.GONE);
             if(isSuccess) {
                 // Finish up here
                 // Update feed?
@@ -293,6 +301,7 @@ public class CreateEvent extends AppCompatActivity {
         @Override
         protected void onCancelled() {
             mAddTask = null;
+            mProgress.setVisibility(View.GONE);
         }
     }
 }
