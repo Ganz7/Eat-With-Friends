@@ -2,12 +2,21 @@ package com.wisconsin.ganz.eatwithfriends;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
 
 
 /**
@@ -29,6 +38,8 @@ public class MainFeedFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    private EventsFetchTask mEventsTask = null;
 
     public MainFeedFragment() {
         // Required empty public constructor
@@ -93,6 +104,75 @@ public class MainFeedFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
+
+
+    /**
+     * Represents an asynchronous event fetching task used to pull events from
+     * the server.
+     */
+    public class EventsFetchTask extends AsyncTask<Void, Void, String> {
+
+        private final String mEmail;
+        private final String mRowCount;
+
+        EventsFetchTask(String email, String rowCount) {
+            mEmail = email;
+            mRowCount = rowCount;
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            try {
+                Uri uri = new Uri.Builder()
+                        .scheme("https")
+                        .authority(getString(R.string.host_name))
+                        .path("events")
+                        .appendQueryParameter("user_email", mEmail)
+                        .appendQueryParameter("row_count", mRowCount)
+                        .build();
+
+                URL url = new URL(uri.toString());
+                Log.w("URI", uri.toString());
+
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.setConnectTimeout(20000);
+                urlConnection.setReadTimeout(20000);
+
+                if (urlConnection.getResponseCode() == 200 || urlConnection.getResponseCode() == 201) {
+                    BufferedReader br = new BufferedReader(new InputStreamReader
+                            (urlConnection.getInputStream()));
+                    StringBuilder sb = new StringBuilder();
+                    String line;
+                    while ((line = br.readLine()) != null) {
+                        sb.append(line + "\n");
+                    }
+                    br.close();
+                    Log.w("URL", "Response:" + sb.toString());
+                    return sb.toString();
+                }
+            } catch (MalformedURLException | ProtocolException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            // If response code is not 2xx or if something else wen't wrong.
+            return "{\"error\":\"Something wen't wrong. Try again.\"}";
+        }
+
+        @Override
+        protected void onPostExecute(final String response) {
+            mEventsTask = null;
+
+        }
+
+        @Override
+        protected void onCancelled() {
+            mEventsTask = null;
+        }
+    }
+
 
     /**
      * This interface must be implemented by activities that contain this
