@@ -98,24 +98,7 @@ public class HomeActivity extends AppCompatActivity
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_logout) {
-            SharedPreferences sharedPref = getApplicationContext().
-                    getSharedPreferences(getString(R.string.preferences_file_name), Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPref.edit();
-
-            // Change User Details in preferences
-            editor.putString(getString(R.string.preferences_user_email), "");
-            editor.putString(getString(R.string.preferences_user_name), "");
-            editor.putBoolean(getString(R.string.preferences_user_logged_in), false);
-
-            editor.commit();
-
-            Toast.makeText(getApplicationContext(), "You are logged out", Toast.LENGTH_SHORT).show();
-
-            Intent loginIntent = new Intent(HomeActivity.this, LoginActivity.class);
-
-            // Clear the entire stack
-            loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(loginIntent);
+            logout();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -123,6 +106,26 @@ public class HomeActivity extends AppCompatActivity
         return true;
     }
 
+    public void logout(){
+        SharedPreferences sharedPref = getApplicationContext().
+                getSharedPreferences(getString(R.string.preferences_file_name), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+
+        // Change User Details in preferences
+        editor.putString(getString(R.string.preferences_user_email), "");
+        editor.putString(getString(R.string.preferences_user_name), "");
+        editor.putBoolean(getString(R.string.preferences_user_logged_in), false);
+
+        editor.commit();
+
+        Toast.makeText(getApplicationContext(), "You are logged out", Toast.LENGTH_SHORT).show();
+
+        Intent loginIntent = new Intent(HomeActivity.this, LoginActivity.class);
+
+        // Clear the entire stack
+        loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(loginIntent);
+    }
     @Override
     public void onFragmentInteraction(Uri uri) {
         //Empty for now
