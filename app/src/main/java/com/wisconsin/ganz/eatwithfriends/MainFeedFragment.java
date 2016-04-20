@@ -1,6 +1,8 @@
 package com.wisconsin.ganz.eatwithfriends;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.database.MatrixCursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -9,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -40,6 +43,10 @@ public class MainFeedFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     private EventsFetchTask mEventsTask = null;
+
+    // View and Adapter Objects
+    private ListView eventListView;
+    private EventListCursorAdapter eventAdapter;
 
     public MainFeedFragment() {
         // Required empty public constructor
@@ -77,16 +84,14 @@ public class MainFeedFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        Log.i("Frag", "Inside Fragment CreateView!");
-        return inflater.inflate(R.layout.fragment_main_feed, container, false);
+        View view = inflater.inflate(R.layout.fragment_main_feed, container, false);
+        eventListView = (ListView) view.findViewById(R.id.event_list);
+
+        populateEventList();
+
+        return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
 
     @Override
     public void onAttach(Context context) {
@@ -105,6 +110,33 @@ public class MainFeedFragment extends Fragment {
         mListener = null;
     }
 
+    /**
+     * Get events from the REST API or from the SQLite Cache
+     */
+    private Cursor getEvents(){
+        // Temporarily use
+        String[] columns = new String[] {"_id", "fieldA", "fieldB"};
+        MatrixCursor matrixCursor = new MatrixCursor(columns);
+
+        matrixCursor.addRow(new Object[] {1, "ItemA1", "ItemA2"});
+        matrixCursor.addRow(new Object[] {2, "ItemB1", "ItemB2"});
+        matrixCursor.addRow(new Object[] {3, "ItemC1", "ItemC2"});
+
+        return matrixCursor;
+    }
+
+    /**
+     * Populate the Event List Adapter
+     *
+     */
+    private void populateEventList(){
+        Cursor cursor = getEvents();
+
+        if (cursor != null && cursor.moveToFirst()) {
+            eventAdapter = new EventListCursorAdapter(getActivity(), cursor, 0);
+            eventListView.setAdapter(eventAdapter);
+        }
+    }
 
     /**
      * Represents an asynchronous event fetching task used to pull events from
