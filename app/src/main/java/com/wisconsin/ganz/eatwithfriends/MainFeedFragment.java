@@ -1,5 +1,6 @@
 package com.wisconsin.ganz.eatwithfriends;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.MatrixCursor;
@@ -11,7 +12,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ListView;
+import android.widget.Toast;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -33,12 +40,12 @@ import java.net.URL;
 public class MainFeedFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_USER_EMAIL = "aUserEmail";
+    private static final String ARG_ROW_COUNT = "aRowCount";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private String mUserEmail;
+    private String mRowCount;
 
     private OnFragmentInteractionListener mListener;
 
@@ -48,6 +55,9 @@ public class MainFeedFragment extends Fragment {
     private ListView eventListView;
     private EventListCursorAdapter eventAdapter;
 
+    // For progress dialog
+    private ProgressDialog progressDialog;
+
     public MainFeedFragment() {
         // Required empty public constructor
     }
@@ -56,16 +66,16 @@ public class MainFeedFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param uemail User Email
+     * @param rcount Row Count
      * @return A new instance of fragment MainFeedFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static MainFeedFragment newInstance(String param1, String param2) {
+    public static MainFeedFragment newInstance(String uemail, String rcount) {
         MainFeedFragment fragment = new MainFeedFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_USER_EMAIL, uemail);
+        args.putString(ARG_ROW_COUNT, rcount);
         fragment.setArguments(args);
         return fragment;
     }
@@ -74,8 +84,8 @@ public class MainFeedFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            mUserEmail = getArguments().getString(ARG_USER_EMAIL);
+            mRowCount = getArguments().getString(ARG_ROW_COUNT);
             Log.i("Frag", "Inside Fragment Create!");
         }
     }
@@ -87,11 +97,19 @@ public class MainFeedFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_main_feed, container, false);
         eventListView = (ListView) view.findViewById(R.id.event_list);
 
-        populateEventList();
+        setUpProgressDialog();
+        //populateEventList();
 
         return view;
     }
 
+    public void setUpProgressDialog(){
+        // Set up the Progress Dialog object
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Loading...");
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -114,6 +132,12 @@ public class MainFeedFragment extends Fragment {
      * Get events from the REST API or from the SQLite Cache
      */
     private Cursor getEvents(){
+
+        progressDialog.show();
+
+        mEventsTask = new EventsFetchTask(mUserEmail, mRowCount);
+        mEventsTask.execute((Void) null);
+
         // Temporarily use
         String[] columns = new String[] {"_id", "fieldA", "fieldB"};
         MatrixCursor matrixCursor = new MatrixCursor(columns);
@@ -129,7 +153,21 @@ public class MainFeedFragment extends Fragment {
      * Populate the Event List Adapter
      *
      */
-    private void populateEventList(){
+    private void parseStringAndPopulateList(String result){
+
+        JSONArray eventJsonArray = null;
+        try {
+            eventJsonArray = new JSONArray(result);
+
+            for(int i=0; i<eventJsonArray.length(); i++){
+                JSONObject eventObject = eventJsonArray.getJSONObject(i);
+
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         Cursor cursor = getEvents();
 
         if (cursor != null && cursor.moveToFirst()) {
@@ -195,13 +233,40 @@ public class MainFeedFragment extends Fragment {
 
         @Override
         protected void onPostExecute(final String response) {
-            mEventsTask = null;
+            Log.i("Feed", response);
+            if(hasError(response)){
+                // Handle it
+            }
+            else{
 
+            }
+            mEventsTask = null;
+            progressDialog.dismiss();
         }
 
         @Override
         protected void onCancelled() {
             mEventsTask = null;
+            progressDialog.dismiss();
+        }
+
+        /**
+         * Checks if the server JSON response has any error
+         * @param response
+         * @return
+         */
+        protected boolean hasError(String response){
+            try {
+                JSONObject jsonObject = new JSONObject(response);
+                if(jsonObject.has("error")) {
+                    String errorMessage = "Not able to fetch events. " + jsonObject.getString("error");
+                    Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return false;
         }
     }
 

@@ -21,6 +21,9 @@ import android.widget.Toast;
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, MainFeedFragment.OnFragmentInteractionListener{
 
+    private String prefUserEmail;
+    private String prefUserName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +41,8 @@ public class HomeActivity extends AppCompatActivity
             }
         });
 
+        setPreferenceInformation();
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -46,6 +51,16 @@ public class HomeActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    /**
+     * Set the private preference variables from SharedPreferences
+     */
+    public void setPreferenceInformation(){
+        SharedPreferences sharedPref = getApplicationContext().
+                getSharedPreferences(getString(R.string.preferences_file_name), Context.MODE_PRIVATE);
+        prefUserEmail = sharedPref.getString(getString(R.string.preferences_user_email), "");
+        prefUserName = sharedPref.getString(getString(R.string.preferences_user_name), "");
     }
 
     @Override
@@ -91,7 +106,8 @@ public class HomeActivity extends AppCompatActivity
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
             fragmentManager.beginTransaction()
-                    .replace(R.id.home_fragment_container, MainFeedFragment.newInstance("balls1", "balls2"))
+                    .replace(R.id.home_fragment_container,
+                            MainFeedFragment.newInstance(prefUserEmail, "5"))
                     .commit();
         } else if (id == R.id.nav_slideshow) {
 
