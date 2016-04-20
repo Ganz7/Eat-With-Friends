@@ -2,7 +2,6 @@ package com.wisconsin.ganz.eatwithfriends;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -98,7 +97,7 @@ public class MainFeedFragment extends Fragment {
         eventListView = (ListView) view.findViewById(R.id.event_list);
 
         setUpProgressDialog();
-        //populateEventList();
+        getEvents();
 
         return view;
     }
@@ -131,47 +130,48 @@ public class MainFeedFragment extends Fragment {
     /**
      * Get events from the REST API or from the SQLite Cache
      */
-    private Cursor getEvents(){
+    private void getEvents(){
 
         progressDialog.show();
 
         mEventsTask = new EventsFetchTask(mUserEmail, mRowCount);
         mEventsTask.execute((Void) null);
 
-        // Temporarily use
-        String[] columns = new String[] {"_id", "fieldA", "fieldB"};
-        MatrixCursor matrixCursor = new MatrixCursor(columns);
-
-        matrixCursor.addRow(new Object[] {1, "ItemA1", "ItemA2"});
-        matrixCursor.addRow(new Object[] {2, "ItemB1", "ItemB2"});
-        matrixCursor.addRow(new Object[] {3, "ItemC1", "ItemC2"});
-
-        return matrixCursor;
     }
 
     /**
      * Populate the Event List Adapter
      *
      */
-    private void parseStringAndPopulateList(String result){
+    protected void parseStringAndPopulateList(String result){
 
+        JSONObject eventResult = null;
         JSONArray eventJsonArray = null;
+        String[] columns = new String[] {"_id", "user_email", "event_location", "event_info"};
+        MatrixCursor matrixCursor = new MatrixCursor(columns);
+
         try {
-            eventJsonArray = new JSONArray(result);
+            eventResult = new JSONObject(result);
+            eventJsonArray =  eventResult.getJSONArray("result");
 
             for(int i=0; i<eventJsonArray.length(); i++){
                 JSONObject eventObject = eventJsonArray.getJSONObject(i);
 
+                Integer eventID = (Integer) eventObject.get("_event_id");
+                String userEmail = eventObject.getString("user_email");
+                String eventLocation = eventObject.getString("event_location");
+
+                String eventInfo = eventObject.getString("event_info");
+
+                matrixCursor.addRow(new Object[] {eventID, userEmail, eventLocation, eventInfo});
             }
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        Cursor cursor = getEvents();
-
-        if (cursor != null && cursor.moveToFirst()) {
-            eventAdapter = new EventListCursorAdapter(getActivity(), cursor, 0);
+        if (matrixCursor != null && matrixCursor.moveToFirst()) {
+            eventAdapter = new EventListCursorAdapter(getActivity(), matrixCursor, 0);
             eventListView.setAdapter(eventAdapter);
         }
     }
@@ -238,7 +238,7 @@ public class MainFeedFragment extends Fragment {
                 // Handle it
             }
             else{
-
+                parseStringAndPopulateList(response);
             }
             mEventsTask = null;
             progressDialog.dismiss();

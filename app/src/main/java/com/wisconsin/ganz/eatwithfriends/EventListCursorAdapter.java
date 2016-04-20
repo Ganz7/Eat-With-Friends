@@ -27,12 +27,13 @@ public class EventListCursorAdapter extends CursorAdapter {
      * Map the values on to the list item
      */
     public void bindView(View view, Context context, Cursor cursor) {
-        TextView eventTitle = (TextView) view.findViewById(R.id.event_title);
-        TextView eventTimes = (TextView) view.findViewById(R.id.event_timings);
+        TextView eventUserEmail = (TextView) view.findViewById(R.id.tv_userEmail);
+        TextView eventLocation = (TextView) view.findViewById(R.id.tv_location);
+        TextView eventInfo = (TextView) view.findViewById(R.id.tv_info);
 
-        eventTitle.setText(cursor.getString(1));
-
-        eventTimes.setText(cursor.getString(2));
+        eventUserEmail.setText(cursor.getString(1));
+        eventLocation.setText(cursor.getString(2));
+        eventInfo.setText(cursor.getString(3));
     }
 
 }
