@@ -93,6 +93,8 @@ public class MainFeedFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_main_feed, container, false);
         eventListView = (ListView) view.findViewById(R.id.event_list);
+        eventListView.addHeaderView(new View(getActivity()));
+        eventListView.addFooterView(new View(getActivity()));
 
         setUpProgressDialog();
         getEvents();

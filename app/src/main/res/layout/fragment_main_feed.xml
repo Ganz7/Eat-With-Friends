@@ -9,6 +9,12 @@
         android:layout_height="wrap_content"
         android:id="@+id/event_list"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:divider="@null"
+        android:dividerHeight="10dp"
+        android:headerDividersEnabled="true"
+        android:footerDividersEnabled="true"
+        android:cacheColorHint="@android:color/transparent"
+        android:listSelector="@android:color/transparent"/>
 
 </RelativeLayout>
