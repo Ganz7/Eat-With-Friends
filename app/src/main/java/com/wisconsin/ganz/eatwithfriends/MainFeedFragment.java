@@ -37,12 +37,10 @@ import java.net.URL;
  * create an instance of this fragment.
  */
 public class MainFeedFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_USER_EMAIL = "aUserEmail";
     private static final String ARG_ROW_COUNT = "aRowCount";
 
-    // TODO: Rename and change types of parameters
     private String mUserEmail;
     private String mRowCount;
 
