@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-medium"
+            android:textSize="24sp"
+            android:text="Large Text"
+            android:id="@+id/tv_userEmail"
+            android:layout_marginTop="6sp"
+            android:textColor="@color/colorPrimaryDark"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="New Text"
+            android:textSize="18sp"
+            android:fontFamily="sans-serif-light"
+            android:id="@+id/tv_location"
+            android:layout_below="@+id/tv_userEmail"
+            android:layout_marginTop="3sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New Text"
+            android:layout_below="@+id/tv_location"
+            android:layout_marginTop="4sp"
+            android:id="@+id/tv_info" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Haloo"
+            android:id="@+id/textView2"
+            android:layout_alignTop="@+id/tv_userEmail"
+            android:layout_alignParentEnd="true" />
+
+    </RelativeLayout>
+
+
+
+
+</LinearLayout>
