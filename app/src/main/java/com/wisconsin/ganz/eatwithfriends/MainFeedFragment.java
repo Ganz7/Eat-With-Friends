@@ -233,11 +233,7 @@ public class MainFeedFragment extends Fragment {
 
         @Override
         protected void onPostExecute(final String response) {
-            Log.i("Feed", response);
-            if(hasError(response)){
-                // Handle it
-            }
-            else{
+            if(!hasError(response)){
                 parseStringAndPopulateList(response);
             }
             mEventsTask = null;
