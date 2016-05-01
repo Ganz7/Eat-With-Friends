@@ -88,7 +88,7 @@ public class EventListCursorAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         TextView eventUserEmail = (TextView) view.findViewById(R.id.tv_userEmail);
         TextView eventLocation = (TextView) view.findViewById(R.id.tv_location);
-        TextView eventInfo = (TextView) view.findViewById(R.id.tv_info);
+        TextView eventInfo = (TextView) view.findViewById(R.id.tv_time);
 
         eventUserEmail.setText(cursor.getString(1));
         eventLocation.setText(cursor.getString(2));
