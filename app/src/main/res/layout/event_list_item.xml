@@ -29,7 +29,6 @@
                 android:textSize="24sp"
                 android:text="Large Text"
                 android:id="@+id/tv_userEmail"
-                android:layout_marginTop="6sp"
                 android:textColor="@color/colorPrimaryDark"/>
 
             <TextView
@@ -59,7 +58,15 @@
                 android:layout_alignParentEnd="true" />
 
         </RelativeLayout>
-
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New Button"
+            android:id="@+id/button"
+            android:paddingBottom="10dp"
+            android:layout_gravity="right|bottom"/>
 
     </LinearLayout>
+
+
 </FrameLayout>
