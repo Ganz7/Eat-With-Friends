@@ -5,8 +5,11 @@ import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CursorAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /***
  * Custom Cursor Adapter for Event List
@@ -19,8 +22,27 @@ public class EventListCursorAdapter extends CursorAdapter {
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        return LayoutInflater.from(context).inflate(R.layout.event_list_item, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.event_list_item, parent, false);
+        Button goButton = (Button) view.findViewById(R.id.button_go);
+        goButton.setOnClickListener(goButtonListener);
+        return view;
     }
+
+    View.OnClickListener goButtonListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            View parentRow = (View) v.getParent().getParent();
+            ListView listView = (ListView) parentRow.getParent();
+            final int position = listView.getPositionForView(parentRow);
+            Toast.makeText(v.getContext(), "Position: "+position, Toast.LENGTH_SHORT).show();
+        }
+    };
+    /*
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent){
+
+        return convertView;
+    }*/
 
     @Override
     /***
