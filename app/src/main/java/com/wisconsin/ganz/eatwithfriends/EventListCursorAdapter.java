@@ -34,7 +34,8 @@ public class EventListCursorAdapter extends CursorAdapter {
             View parentRow = (View) v.getParent().getParent();
             ListView listView = (ListView) parentRow.getParent();
             final int position = listView.getPositionForView(parentRow);
-            Toast.makeText(v.getContext(), "Position: "+position, Toast.LENGTH_SHORT).show();
+            final long chosen_ID = listView.getItemIdAtPosition(position);
+            Toast.makeText(v.getContext(), "Position: "+chosen_ID, Toast.LENGTH_SHORT).show();
         }
     };
     /*
