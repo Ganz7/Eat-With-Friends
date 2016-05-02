@@ -106,7 +106,7 @@ public class EventListCursorAdapter extends CursorAdapter {
             goButton.setTextColor(ContextCompat.getColor(context, R.color.materialGreen1));
         }
         else{
-            goButton.setText("Go!");
+            goButton.setText("Attend");
         }
     }
 
@@ -218,7 +218,7 @@ public class EventListCursorAdapter extends CursorAdapter {
         progressDialog = new ProgressDialog(ctx);
         progressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Loading...");
+        progressDialog.setMessage("Updating...");
     }
 
 }
