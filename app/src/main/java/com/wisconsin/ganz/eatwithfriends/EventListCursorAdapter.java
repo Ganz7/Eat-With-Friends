@@ -65,16 +65,6 @@ public class EventListCursorAdapter extends CursorAdapter {
         }
     };
 
-    boolean updateUserEventStatus(ListView view, long event_ID){
-
-        progressDialog.show();
-        // TODO: get email from pref
-        mEventsTask = new EventsFetchTask(view, "qwer@x.com", event_ID);
-        mEventsTask.execute((Void) null);
-
-        return false;
-    }
-
     /*
     @Override
     public View getView(int position, View convertView, ViewGroup parent){
@@ -110,6 +100,18 @@ public class EventListCursorAdapter extends CursorAdapter {
         }
     }
 
+
+    boolean updateUserEventStatus(ListView view, long event_ID){
+
+        progressDialog.show();
+        // TODO: get email from pref
+        mEventsTask = new EventsFetchTask(view, "qwer@x.com", event_ID);
+        mEventsTask.execute((Void) null);
+
+        return false;
+    }
+
+
     public void replaceLoader(ListView view, String response){
         Toast.makeText(view.getContext(), response, Toast.LENGTH_SHORT).show();
         view.setAdapter(null);
@@ -140,10 +142,11 @@ public class EventListCursorAdapter extends CursorAdapter {
                 Uri uri = new Uri.Builder()
                         .scheme("https")
                         .authority(mCtx.getString(R.string.host_name))
-                        .path("events")
+                        .path("events/user_event_status")
                         .appendQueryParameter("user_email", mEmail)
-                        .appendQueryParameter("row_count", String.valueOf(1))
-                        //.appendQueryParameter("event_ID", String.valueOf(mEventID))
+                        //.appendQueryParameter("row_count", String.valueOf(1))
+                        .appendQueryParameter("event_id", String.valueOf(mEventID))
+                        .appendQueryParameter("status", String.valueOf(true))
                         .build();
 
                 URL url = new URL(uri.toString());
@@ -170,12 +173,10 @@ public class EventListCursorAdapter extends CursorAdapter {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
-            } finally{
-                return "{\"error\":\"Something wen't wrong. Try again.\"}";
             }
 
             // If response code is not 2xx or if something else wen't wrong.
-            //return "{\"error\":\"Something wen't wrong. Try again.\"}";
+            return "{\"error\":\"Something wen't wrong. Try again.\"}";
         }
 
         @Override
