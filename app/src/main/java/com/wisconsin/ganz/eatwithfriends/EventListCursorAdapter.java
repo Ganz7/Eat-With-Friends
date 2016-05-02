@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,7 +55,7 @@ public class EventListCursorAdapter extends CursorAdapter {
     View.OnClickListener goButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            View parentRow = (View) v.getParent().getParent();
+            View parentRow = (View) v.getParent().getParent().getParent();
             ListView listView = (ListView) parentRow.getParent();
             final int position = listView.getPositionForView(parentRow);
             final long chosen_ID = listView.getItemIdAtPosition(position);
@@ -88,11 +89,25 @@ public class EventListCursorAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         TextView eventUserEmail = (TextView) view.findViewById(R.id.tv_userEmail);
         TextView eventLocation = (TextView) view.findViewById(R.id.tv_location);
-        TextView eventInfo = (TextView) view.findViewById(R.id.tv_time);
+        TextView eventTime = (TextView) view.findViewById(R.id.tv_time);
+        TextView eventDate = (TextView) view.findViewById(R.id.tv_date);
+        Button goButton = (Button) view.findViewById(R.id.button_go);
 
         eventUserEmail.setText(cursor.getString(1));
         eventLocation.setText(cursor.getString(2));
-        eventInfo.setText(cursor.getString(3));
+
+        String time = cursor.getString(3) + " to " + cursor.getString(4);
+        eventTime.setText(time);
+
+        eventDate.setText(cursor.getString(5));
+        boolean isGoing = Boolean.parseBoolean(cursor.getString(6));
+        if(isGoing){
+            goButton.setText("Going");
+            goButton.setTextColor(ContextCompat.getColor(context, R.color.materialGreen1));
+        }
+        else{
+            goButton.setText("Go!");
+        }
     }
 
     public void replaceLoader(ListView view, String response){
