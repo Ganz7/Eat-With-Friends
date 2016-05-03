@@ -2,6 +2,7 @@ package com.wisconsin.ganz.eatwithfriends;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -59,9 +60,17 @@ public class EventListCursorAdapter extends CursorAdapter {
             ListView listView = (ListView) parentRow.getParent();
             final int position = listView.getPositionForView(parentRow);
             final long chosen_ID = listView.getItemIdAtPosition(position);
-
             Toast.makeText(v.getContext(), "Position: "+chosen_ID, Toast.LENGTH_SHORT).show();
-            updateUserEventStatus(listView, chosen_ID);
+
+            Button button = (Button) v;
+            // User is going now. So request has been made to mark as not-going.
+            if(button.getText().toString().equals(Resources.getSystem().getString(R.string.button_going))){
+                updateUserEventStatus(listView, chosen_ID, false);
+            }
+            // User is not going. But has requested to go.
+            else{
+                updateUserEventStatus(listView, chosen_ID, true);
+            }
         }
     };
 
@@ -92,20 +101,21 @@ public class EventListCursorAdapter extends CursorAdapter {
         eventDate.setText(cursor.getString(5));
         boolean isGoing = Boolean.parseBoolean(cursor.getString(6));
         if(isGoing){
-            goButton.setText("Going");
+            goButton.setText(Resources.getSystem().getString(R.string.button_going));
             goButton.setTextColor(ContextCompat.getColor(context, R.color.materialGreen1));
         }
         else{
-            goButton.setText("Attend");
+            goButton.setText(Resources.getSystem().getString(R.string.button_go));
+            goButton.setTextColor(ContextCompat.getColor(context, R.color.colorAccent));
         }
     }
 
 
-    boolean updateUserEventStatus(ListView view, long event_ID){
+    boolean updateUserEventStatus(ListView view, long event_ID, boolean isGoing){
 
         progressDialog.show();
         // TODO: get email from pref
-        mEventsTask = new EventsFetchTask(view, "qwer@x.com", event_ID);
+        mEventsTask = new EventsFetchTask(view, "qwer@x.com", event_ID, isGoing);
         mEventsTask.execute((Void) null);
 
         return false;
@@ -127,12 +137,14 @@ public class EventListCursorAdapter extends CursorAdapter {
         private final long mEventID;
         private final ListView mView;
         private final Context mCtx;
+        private final boolean mIsGoing;
 
-        EventsFetchTask(ListView view, String email, long event_ID) {
+        EventsFetchTask(ListView view, String email, long event_ID, boolean isGoing) {
             mEmail = email;
             mEventID = event_ID;
             mView = view;
             mCtx = view.getContext();
+            mIsGoing = isGoing;
         }
 
         @Override
@@ -146,7 +158,7 @@ public class EventListCursorAdapter extends CursorAdapter {
                         .appendQueryParameter("user_email", mEmail)
                         //.appendQueryParameter("row_count", String.valueOf(1))
                         .appendQueryParameter("event_id", String.valueOf(mEventID))
-                        .appendQueryParameter("status", String.valueOf(true))
+                        .appendQueryParameter("status", String.valueOf(mIsGoing))
                         .build();
 
                 URL url = new URL(uri.toString());

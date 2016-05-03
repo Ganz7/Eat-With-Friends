@@ -70,7 +70,7 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Going!"
+                android:text="@string/button__go"
                 android:id="@+id/button_go"
                 android:layout_below="@+id/tv_time"
                 android:paddingTop="22sp"
