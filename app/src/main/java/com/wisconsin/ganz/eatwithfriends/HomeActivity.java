@@ -21,8 +21,8 @@ import android.widget.Toast;
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, MainFeedFragment.OnFragmentInteractionListener{
 
-    private String prefUserEmail;
-    private String prefUserName;
+    private static String prefUserEmail;
+    private static String prefUserName;
 
     private static Context contextOfApp;
     private static FragmentManager fManager;
@@ -160,5 +160,9 @@ public class HomeActivity extends AppCompatActivity
     @Override
     public void onFragmentInteraction(Uri uri) {
         //Empty for now
+    }
+
+    public static String getUserPrefEmail(){
+        return prefUserEmail;
     }
 }

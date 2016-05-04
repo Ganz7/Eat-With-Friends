@@ -114,16 +114,25 @@ public class EventListCursorAdapter extends CursorAdapter {
 
         progressDialog.show();
         // TODO: get email from pref
-        mEventsTask = new EventsFetchTask(view, "qwer@x.com", event_ID, isGoing);
+        mEventsTask = new EventsFetchTask(view, HomeActivity.getUserPrefEmail(), event_ID, isGoing);
         mEventsTask.execute((Void) null);
 
         return false;
     }
 
 
-    public void replaceLoader(ListView view, String response){
-        Toast.makeText(view.getContext(), response, Toast.LENGTH_SHORT).show();
-        view.setAdapter(null);
+    public void replaceLoader(ListView view, String response, Context ctx){
+        mEventsTask = null;
+        progressDialog.dismiss();
+
+            /* Incredibly Hackish way! But this is a class project that cannot be given anymore time
+             * Should fix this entire workflow in the future */
+        Toast.makeText(ctx, "Status Successfully updated.", Toast.LENGTH_SHORT).show();
+        HomeActivity.getfManager().beginTransaction()
+                .replace(R.id.home_fragment_container,
+                        MainFeedFragment.newInstance(HomeActivity.getUserPrefEmail(), "15"))
+                .addToBackStack(null)
+                .commit();
     }
 
     /**
@@ -193,18 +202,10 @@ public class EventListCursorAdapter extends CursorAdapter {
         @Override
         protected void onPostExecute(final String response) {
             if(!hasError(response)){
-                replaceLoader(mView, response);
+                replaceLoader(mView, response, mCtx);
             }
             mEventsTask = null;
             progressDialog.dismiss();
-
-            /* Incredibly Hackish way! But this is a class project that cannot be given anymore time
-             * Should fix this entire workflow in the future */
-            HomeActivity.getfManager().beginTransaction()
-                    .replace(R.id.home_fragment_container,
-                            MainFeedFragment.newInstance("qwer@x.com", "5"))
-                    .addToBackStack(null)
-                    .commit();
         }
 
         @Override
@@ -222,7 +223,7 @@ public class EventListCursorAdapter extends CursorAdapter {
             try {
                 JSONObject jsonObject = new JSONObject(response);
                 if(jsonObject.has("error")) {
-                    String errorMessage = "Not able to fetch events. " + jsonObject.getString("error");
+                    String errorMessage = "Not able to update status. " + jsonObject.getString("error");
                     Toast.makeText(mCtx.getApplicationContext(), errorMessage, Toast.LENGTH_SHORT).show();
                     return true;
                 }
