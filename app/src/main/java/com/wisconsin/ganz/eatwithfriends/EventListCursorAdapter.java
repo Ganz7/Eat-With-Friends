@@ -2,7 +2,6 @@ package com.wisconsin.ganz.eatwithfriends;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -64,7 +63,7 @@ public class EventListCursorAdapter extends CursorAdapter {
 
             Button button = (Button) v;
             // User is going now. So request has been made to mark as not-going.
-            if(button.getText().toString().equals(Resources.getSystem().getString(R.string.button_going))){
+            if(button.getText().toString().equals(HomeActivity.getContextOfApp().getString(R.string.button_going))){
                 updateUserEventStatus(listView, chosen_ID, false);
             }
             // User is not going. But has requested to go.
@@ -101,11 +100,11 @@ public class EventListCursorAdapter extends CursorAdapter {
         eventDate.setText(cursor.getString(5));
         boolean isGoing = Boolean.parseBoolean(cursor.getString(6));
         if(isGoing){
-            goButton.setText(Resources.getSystem().getString(R.string.button_going));
+            goButton.setText(HomeActivity.getContextOfApp().getString(R.string.button_going));
             goButton.setTextColor(ContextCompat.getColor(context, R.color.materialGreen1));
         }
         else{
-            goButton.setText(Resources.getSystem().getString(R.string.button_go));
+            goButton.setText(HomeActivity.getContextOfApp().getString(R.string.button_go));
             goButton.setTextColor(ContextCompat.getColor(context, R.color.colorAccent));
         }
     }
@@ -198,6 +197,14 @@ public class EventListCursorAdapter extends CursorAdapter {
             }
             mEventsTask = null;
             progressDialog.dismiss();
+
+            /* Incredibly Hackish way! But this is a class project that cannot be given anymore time
+             * Should fix this entire workflow in the future */
+            HomeActivity.getfManager().beginTransaction()
+                    .replace(R.id.home_fragment_container,
+                            MainFeedFragment.newInstance("qwer@x.com", "5"))
+                    .addToBackStack(null)
+                    .commit();
         }
 
         @Override

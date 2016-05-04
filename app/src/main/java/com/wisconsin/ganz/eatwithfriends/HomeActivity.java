@@ -24,10 +24,17 @@ public class HomeActivity extends AppCompatActivity
     private String prefUserEmail;
     private String prefUserName;
 
+    private static Context contextOfApp;
+    private static FragmentManager fManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        contextOfApp = getApplicationContext();
+        fManager = getSupportFragmentManager();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -51,6 +58,13 @@ public class HomeActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    public static Context getContextOfApp(){
+        return contextOfApp;
+    }
+    public static FragmentManager getfManager(){
+        return fManager;
     }
 
     /**
@@ -108,6 +122,7 @@ public class HomeActivity extends AppCompatActivity
             fragmentManager.beginTransaction()
                     .replace(R.id.home_fragment_container,
                             MainFeedFragment.newInstance(prefUserEmail, "5"))
+                    .addToBackStack(null)
                     .commit();
         } else if (id == R.id.nav_slideshow) {
 
