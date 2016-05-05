@@ -52,10 +52,12 @@ public class EventListCursorAdapter extends CursorAdapter {
         goButton.setOnClickListener(goButtonListener);
 
         ImageView placeButton = (ImageView) view.findViewById(R.id.iv_location);
+        placeButton.setOnClickListener(placeButtonListener);
 
         setUpProgressDialog(parent.getContext());
         return view;
     }
+
     View.OnClickListener placeButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -64,6 +66,7 @@ public class EventListCursorAdapter extends CursorAdapter {
             HomeActivity.getContextOfApp().startActivity(intent);
         }
     };
+
     View.OnClickListener goButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
