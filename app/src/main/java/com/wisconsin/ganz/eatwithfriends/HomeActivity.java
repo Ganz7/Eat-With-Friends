@@ -121,8 +121,7 @@ public class HomeActivity extends AppCompatActivity
         } else if (id == R.id.nav_gallery) {
             fragmentManager.beginTransaction()
                     .replace(R.id.home_fragment_container,
-                            MainFeedFragment.newInstance(prefUserEmail, "5"))
-                    .addToBackStack(null)
+                            MainFeedFragment.newInstance(prefUserEmail, "25"))
                     .commit();
         } else if (id == R.id.nav_slideshow) {
 

@@ -131,7 +131,6 @@ public class EventListCursorAdapter extends CursorAdapter {
         HomeActivity.getfManager().beginTransaction()
                 .replace(R.id.home_fragment_container,
                         MainFeedFragment.newInstance(HomeActivity.getUserPrefEmail(), "15"))
-                .addToBackStack(null)
                 .commit();
     }
 
