@@ -251,7 +251,7 @@ public class CreateEvent extends AppCompatActivity {
                 Uri uri = new Uri.Builder()
                         .scheme("https")
                         .authority(getString(R.string.host_name))
-                        .path("create/event")
+                        .path("creation/event")
                         .appendQueryParameter("user_email", mUserEmail)
                         .appendQueryParameter("event_location", mLocation)
                         .appendQueryParameter("event_start_time", mStartTime)
