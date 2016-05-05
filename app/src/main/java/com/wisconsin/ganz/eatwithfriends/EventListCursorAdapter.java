@@ -2,6 +2,7 @@ package com.wisconsin.ganz.eatwithfriends;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.CursorAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +29,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.util.Locale;
 
 /***
  * Custom Cursor Adapter for Event List
@@ -48,10 +51,19 @@ public class EventListCursorAdapter extends CursorAdapter {
         Button goButton = (Button) view.findViewById(R.id.button_go);
         goButton.setOnClickListener(goButtonListener);
 
+        ImageView placeButton = (ImageView) view.findViewById(R.id.iv_location);
+
         setUpProgressDialog(parent.getContext());
         return view;
     }
-
+    View.OnClickListener placeButtonListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            String uri = String.format(Locale.ENGLISH, "geo:0,0?q=%f", Uri.encode((String)v.getTag()));
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+            HomeActivity.getContextOfApp().startActivity(intent);
+        }
+    };
     View.OnClickListener goButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -90,12 +102,14 @@ public class EventListCursorAdapter extends CursorAdapter {
         TextView eventTime = (TextView) view.findViewById(R.id.tv_time);
         TextView eventDate = (TextView) view.findViewById(R.id.tv_date);
         Button goButton = (Button) view.findViewById(R.id.button_go);
+        ImageView placeButton = (ImageView) view.findViewById(R.id.iv_location);
 
         eventUserEmail.setText(cursor.getString(1));
 
         String[] placeInfo = cursor.getString(2).split("\\|");
 
         eventLocation.setText(placeInfo[0]);
+        placeButton.setTag(placeInfo[0] + " " + placeInfo[1]);
 
         String time = cursor.getString(3) + " to " + cursor.getString(4);
         eventTime.setText(time);
