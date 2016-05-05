@@ -25,6 +25,7 @@
         android:id="@+id/et_location"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/iv_location"
+        android:focusable="false"
         android:hint="Where are you eating?" />
 
     <EditText
@@ -36,7 +37,7 @@
         android:layout_below="@+id/et_location"
         android:hint="Choose date"
         android:layout_marginTop="5sp"
-        android:focusable="false"/>
+        android:focusable="true"/>
 
     <EditText
         android:layout_width="match_parent"

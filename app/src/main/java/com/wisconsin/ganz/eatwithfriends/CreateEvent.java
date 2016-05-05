@@ -3,10 +3,14 @@ package com.wisconsin.ganz.eatwithfriends;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -16,6 +20,11 @@ import android.view.Window;
 import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
+
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,6 +42,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+
 public class CreateEvent extends AppCompatActivity {
 
     private EditText et_location;
@@ -43,6 +54,12 @@ public class CreateEvent extends AppCompatActivity {
 
     // Keep Track of Server Add Task
     private ServerAddTask mAddTask = null;
+
+    // ID for ACCESS_FINE_LOCATION permission request
+    private static int REQUEST_ACCESS_FINE_LOCATION = 0;
+
+    // ID for Place Picker Activity Request
+    private static int PLACE_PICKER_REQUEST = 1;
 
     // For progress dialog
     private ProgressDialog progressDialog;
@@ -55,6 +72,7 @@ public class CreateEvent extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         initializeViewsAndSetListeners();
+        requestFineLocationAccess();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -64,6 +82,75 @@ public class CreateEvent extends AppCompatActivity {
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+
+    private boolean requestFineLocationAccess() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return true;
+        }
+        if (checkSelfPermission(ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            return true;
+        }
+        /*
+        if (shouldShowRequestPermissionRationale(ACCESS_FINE_LOCATION)) {
+            Snackbar.make(et_location, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
+                    .setAction(android.R.string.ok, new View.OnClickListener() {
+                        @Override
+                        @TargetApi(Build.VERSION_CODES.M)
+                        public void onClick(View v) {
+                            requestPermissions(new String[]{ACCESS_FINE_LOCATION}, REQUEST_ACCESS_FINE_LOCATION);
+                        }
+                    });
+        } else {*/
+            requestPermissions(new String[]{ACCESS_FINE_LOCATION}, REQUEST_ACCESS_FINE_LOCATION);
+        //}
+        return false;
+    }
+
+    /**
+     * Callback received when a permissions request has been completed.
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_ACCESS_FINE_LOCATION) {
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Do regular stuff here
+                setUpPlacePicker();
+            }
+            else{
+                finish();
+                // Or maybe not?
+            }
+        }
+    }
+
+    private void setUpPlacePicker(){
+        et_location.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+                try {
+                    startActivityForResult(builder.build(CreateEvent.this), PLACE_PICKER_REQUEST);
+                } catch (GooglePlayServicesRepairableException e) {
+                    e.printStackTrace();
+                } catch (GooglePlayServicesNotAvailableException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PLACE_PICKER_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                Place place = PlacePicker.getPlace(this, data);
+                String toastMsg = String.format("Place: %s", place.getName());
+                Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     /**
