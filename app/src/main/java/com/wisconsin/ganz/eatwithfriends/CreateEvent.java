@@ -17,6 +17,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -46,7 +47,8 @@ import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 public class CreateEvent extends AppCompatActivity {
 
-    private EditText et_location;
+    //private EditText et_location;
+    private Button bu_location;
     private EditText et_date;
     private EditText et_start_time;
     private EditText et_end_time;
@@ -90,6 +92,7 @@ public class CreateEvent extends AppCompatActivity {
             return true;
         }
         if (checkSelfPermission(ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            setUpPlacePicker();
             return true;
         }
         /*
@@ -127,7 +130,8 @@ public class CreateEvent extends AppCompatActivity {
     }
 
     private void setUpPlacePicker(){
-        et_location.setOnClickListener(new View.OnClickListener(){
+        //et_location.setFocusable(false);
+        bu_location.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View v) {
@@ -147,8 +151,8 @@ public class CreateEvent extends AppCompatActivity {
         if (requestCode == PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(this, data);
-                String toastMsg = String.format("Place: %s", place.getName());
-                Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
+                String placeInfo = String.format("%s | %s", place.getName(), place.getAddress());
+                bu_location.setText(placeInfo);
             }
         }
     }
@@ -158,7 +162,8 @@ public class CreateEvent extends AppCompatActivity {
      * for the relevant elements.
      */
     private void initializeViewsAndSetListeners(){
-        et_location = (EditText) findViewById(R.id.et_location);
+        //et_location = (EditText) findViewById(R.id.et_location);
+        bu_location = (Button) findViewById(R.id.et_location);
         et_date = (EditText) findViewById(R.id.et_date);
         et_start_time = (EditText) findViewById(R.id.et_start_time);
         et_end_time = (EditText) findViewById(R.id.et_end_time);
@@ -210,7 +215,7 @@ public class CreateEvent extends AppCompatActivity {
      * Process user request to create a new event
      */
     private void extractDataAndSubmit(){
-        String location = et_location.getText().toString().trim();
+        String location = bu_location.getText().toString().trim();
         String date = et_date.getText().toString().trim();
         String start_time = et_start_time.getText().toString().trim();
         String end_time = et_end_time.getText().toString().trim();
