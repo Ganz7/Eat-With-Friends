@@ -26,6 +26,10 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
 
 
 /**
@@ -147,12 +151,15 @@ public class MainFeedFragment extends Fragment {
 
         JSONObject eventResult = null;
         JSONArray eventJsonArray = null;
-        String[] columns = new String[] {"_id", "user_email", "event_location", "event_info"};
+        JSONArray eventStatusJsonArray = null;
+        String[] columns = new String[] {"_id", "user_email", "event_location",
+                "event_start_time", "event_end_time", "event_date", "event_status", "event_info"};
         MatrixCursor matrixCursor = new MatrixCursor(columns);
 
         try {
             eventResult = new JSONObject(result);
             eventJsonArray =  eventResult.getJSONArray("result");
+            eventStatusJsonArray = eventResult.getJSONArray("user_status_result");
 
             for(int i=0; i<eventJsonArray.length(); i++){
                 JSONObject eventObject = eventJsonArray.getJSONObject(i);
@@ -160,10 +167,18 @@ public class MainFeedFragment extends Fragment {
                 Integer eventID = (Integer) eventObject.get("_event_id");
                 String userEmail = eventObject.getString("user_email");
                 String eventLocation = eventObject.getString("event_location");
-
                 String eventInfo = eventObject.getString("event_info");
 
-                matrixCursor.addRow(new Object[] {eventID, userEmail, eventLocation, eventInfo});
+
+                matrixCursor.addRow(new Object[] {eventID,
+                                                userEmail,
+                                                eventLocation,
+                                                getTime(eventObject.getString("event_start_time")),
+                                                getTime(eventObject.getString("event_end_time")),
+                                                getDate(eventObject.getString("event_start_time")),
+                                                isAttending(eventStatusJsonArray, eventID),
+                                                eventInfo
+                                                });
             }
 
         } catch (JSONException e) {
@@ -174,6 +189,45 @@ public class MainFeedFragment extends Fragment {
             eventAdapter = new EventListCursorAdapter(getActivity(), matrixCursor, 0);
             eventListView.setAdapter(eventAdapter);
         }
+    }
+
+    private boolean isAttending(JSONArray statusArray, int eventID){
+        try {
+            for (int i = 0; i < statusArray.length(); i++) {
+                JSONObject obj = statusArray.getJSONObject(i);
+                if(obj.getInt("event_id") == eventID) {
+                    return obj.getBoolean("user_attendance");
+                }
+            }
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    private Date getDateObject(String input){
+        input = input.replace("T", " ").split("\\.")[0];
+
+        SimpleDateFormat f1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = new Date();
+        try {
+            date = f1.parse(input);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date;
+    }
+    public String getTime(String input){
+        Date date = getDateObject(input);
+        SimpleDateFormat f2 = new SimpleDateFormat("HH:mm"); //Custom time format
+        f2.setTimeZone(TimeZone.getDefault());
+        return f2.format(date);
+    }
+    public String getDate(String input){
+        Date date = getDateObject(input);
+        SimpleDateFormat f2 = new SimpleDateFormat("yyyy/MM/dd"); //Custom time format
+        f2.setTimeZone(TimeZone.getDefault());
+        return f2.format(date);
     }
 
     /**

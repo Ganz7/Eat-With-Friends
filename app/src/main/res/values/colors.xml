@@ -6,4 +6,6 @@
 
     <color name="offWhite">#EFEFEF</color>
     <color name="offoffWhite">#BCBCBC</color>
+
+    <color name="materialGreen1">#00C853</color>
 </resources>

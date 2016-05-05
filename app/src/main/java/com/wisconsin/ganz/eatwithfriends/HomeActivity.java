@@ -21,13 +21,20 @@ import android.widget.Toast;
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, MainFeedFragment.OnFragmentInteractionListener{
 
-    private String prefUserEmail;
-    private String prefUserName;
+    private static String prefUserEmail;
+    private static String prefUserName;
+
+    private static Context contextOfApp;
+    private static FragmentManager fManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        contextOfApp = getApplicationContext();
+        fManager = getSupportFragmentManager();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -51,6 +58,13 @@ public class HomeActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    public static Context getContextOfApp(){
+        return contextOfApp;
+    }
+    public static FragmentManager getfManager(){
+        return fManager;
     }
 
     /**
@@ -107,7 +121,7 @@ public class HomeActivity extends AppCompatActivity
         } else if (id == R.id.nav_gallery) {
             fragmentManager.beginTransaction()
                     .replace(R.id.home_fragment_container,
-                            MainFeedFragment.newInstance(prefUserEmail, "5"))
+                            MainFeedFragment.newInstance(prefUserEmail, "25"))
                     .commit();
         } else if (id == R.id.nav_slideshow) {
 
@@ -145,5 +159,9 @@ public class HomeActivity extends AppCompatActivity
     @Override
     public void onFragmentInteraction(Uri uri) {
         //Empty for now
+    }
+
+    public static String getUserPrefEmail(){
+        return prefUserEmail;
     }
 }

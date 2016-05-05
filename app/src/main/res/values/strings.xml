@@ -25,6 +25,9 @@
 
     <string name="action_settings">Settings</string>
 
+    <string name="button_going">GOING</string>
+    <string name="button_go">ATTEND</string>
+
     <!-- Preferences Strings -->
     <string name="preferences_file_name">com.wisconsin.ganz.eatWithFriends.userDetails</string>
     <string name="preferences_user_name">pref_user_name</string>
