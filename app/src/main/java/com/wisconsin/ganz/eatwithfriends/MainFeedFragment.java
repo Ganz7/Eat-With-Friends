@@ -152,7 +152,7 @@ public class MainFeedFragment extends Fragment {
         JSONObject eventResult = null;
         JSONArray eventJsonArray = null;
         JSONArray eventStatusJsonArray = null;
-        String[] columns = new String[] {"_id", "user_email", "event_location",
+        String[] columns = new String[] {"_id", "user_email", "user_name", "event_location",
                 "event_start_time", "event_end_time", "event_date", "event_status", "event_info"};
         MatrixCursor matrixCursor = new MatrixCursor(columns);
 
@@ -166,12 +166,14 @@ public class MainFeedFragment extends Fragment {
 
                 Integer eventID = (Integer) eventObject.get("_event_id");
                 String userEmail = eventObject.getString("user_email");
+                String userName = eventObject.getString("user_name");
                 String eventLocation = eventObject.getString("event_location");
                 String eventInfo = eventObject.getString("event_info");
 
 
                 matrixCursor.addRow(new Object[] {eventID,
                                                 userEmail,
+                                                userName,
                                                 eventLocation,
                                                 getTime(eventObject.getString("event_start_time")),
                                                 getTime(eventObject.getString("event_end_time")),

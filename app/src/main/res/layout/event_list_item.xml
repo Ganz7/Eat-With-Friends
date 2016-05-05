@@ -29,7 +29,7 @@
                 android:fontFamily="sans-serif-medium"
                 android:textSize="18sp"
                 android:text="FNAME L"
-                android:id="@+id/tv_userEmail"
+                android:id="@+id/tv_userName"
                 android:textColor="@color/colorPrimary" />
 
             <View
@@ -37,7 +37,7 @@
                 android:layout_height="2dp"
                 android:id="@+id/line_seperator"
                 android:background="#00E676"
-                android:layout_below="@+id/tv_userEmail" />
+                android:layout_below="@+id/tv_userName" />
 
             <TextView
                 android:layout_width="match_parent"

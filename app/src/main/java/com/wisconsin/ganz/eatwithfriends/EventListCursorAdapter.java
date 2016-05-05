@@ -100,25 +100,29 @@ public class EventListCursorAdapter extends CursorAdapter {
      * Map the values on to the list item
      */
     public void bindView(View view, Context context, Cursor cursor) {
-        TextView eventUserEmail = (TextView) view.findViewById(R.id.tv_userEmail);
+        TextView eventUserName = (TextView) view.findViewById(R.id.tv_userName);
         TextView eventLocation = (TextView) view.findViewById(R.id.tv_location);
         TextView eventTime = (TextView) view.findViewById(R.id.tv_time);
         TextView eventDate = (TextView) view.findViewById(R.id.tv_date);
         Button goButton = (Button) view.findViewById(R.id.button_go);
         ImageView placeButton = (ImageView) view.findViewById(R.id.iv_location);
 
-        eventUserEmail.setText(cursor.getString(1));
+        eventUserName.setTag(cursor.getString(1)); // Set email as tag
 
-        String[] placeInfo = cursor.getString(2).split("\\|");
+        String[] userNameInfo = cursor.getString(2).split(" ");
+        String formattedUserName = userNameInfo[0].trim() + " " + userNameInfo[userNameInfo.length-1].subSequence(0,1);
+        eventUserName.setText(formattedUserName.toUpperCase());
+
+        String[] placeInfo = cursor.getString(3).split("\\|");
 
         eventLocation.setText(placeInfo[0]);
         placeButton.setTag(placeInfo[0] + " " + placeInfo[1]);
 
-        String time = cursor.getString(3) + " to " + cursor.getString(4);
+        String time = cursor.getString(4) + " to " + cursor.getString(5);
         eventTime.setText(time);
 
-        eventDate.setText(cursor.getString(5));
-        boolean isGoing = Boolean.parseBoolean(cursor.getString(6));
+        eventDate.setText(cursor.getString(6));
+        boolean isGoing = Boolean.parseBoolean(cursor.getString(7));
         if(isGoing){
             goButton.setText(HomeActivity.getContextOfApp().getString(R.string.button_going));
             goButton.setTextColor(ContextCompat.getColor(context, R.color.materialGreen1));
