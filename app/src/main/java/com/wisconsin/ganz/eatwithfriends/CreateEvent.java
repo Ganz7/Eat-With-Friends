@@ -325,6 +325,7 @@ public class CreateEvent extends AppCompatActivity {
         private final String mEndTime;
         private final String mInfo;
         private final String mUserEmail;
+        private final String mUserName;
 
         ServerAddTask(String location, String start_time, String end_time, String info) {
             mLocation = location;
@@ -332,9 +333,11 @@ public class CreateEvent extends AppCompatActivity {
             mEndTime = end_time;
             mInfo = info;
 
+
             SharedPreferences sharedPref = getApplicationContext().
                     getSharedPreferences(getString(R.string.preferences_file_name), Context.MODE_PRIVATE);
             mUserEmail = sharedPref.getString(getString(R.string.preferences_user_email), "");
+            mUserName = sharedPref.getString(getString(R.string.preferences_user_name), "");
         }
 
         @Override
@@ -345,6 +348,7 @@ public class CreateEvent extends AppCompatActivity {
                         .authority(getString(R.string.host_name))
                         .path("creation/event")
                         .appendQueryParameter("user_email", mUserEmail)
+                        .appendQueryParameter("user_name", mUserName)
                         .appendQueryParameter("event_location", mLocation)
                         .appendQueryParameter("event_start_time", mStartTime)
                         .appendQueryParameter("event_end_time", mEndTime)

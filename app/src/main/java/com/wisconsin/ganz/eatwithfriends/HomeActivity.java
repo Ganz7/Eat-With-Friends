@@ -66,6 +66,10 @@ public class HomeActivity extends AppCompatActivity
     public static FragmentManager getfManager(){
         return fManager;
     }
+    public static String getPrefUserName() {return prefUserName;}
+    public static String getUserPrefEmail(){
+        return prefUserEmail;
+    }
 
     /**
      * Set the private preference variables from SharedPreferences
@@ -159,9 +163,5 @@ public class HomeActivity extends AppCompatActivity
     @Override
     public void onFragmentInteraction(Uri uri) {
         //Empty for now
-    }
-
-    public static String getUserPrefEmail(){
-        return prefUserEmail;
     }
 }
