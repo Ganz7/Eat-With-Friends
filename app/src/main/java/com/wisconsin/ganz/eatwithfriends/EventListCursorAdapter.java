@@ -92,7 +92,10 @@ public class EventListCursorAdapter extends CursorAdapter {
         Button goButton = (Button) view.findViewById(R.id.button_go);
 
         eventUserEmail.setText(cursor.getString(1));
-        eventLocation.setText(cursor.getString(2));
+
+        String[] placeInfo = cursor.getString(2).split("\\|");
+
+        eventLocation.setText(placeInfo[0]);
 
         String time = cursor.getString(3) + " to " + cursor.getString(4);
         eventTime.setText(time);
