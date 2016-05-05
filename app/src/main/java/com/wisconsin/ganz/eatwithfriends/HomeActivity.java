@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class HomeActivity extends AppCompatActivity
@@ -30,6 +31,10 @@ public class HomeActivity extends AppCompatActivity
 
     // Request Codes
     private static int CREATE_ACTIVITY_RESULT  = 10;
+
+    // Constants
+    private final static int NUMBER_OF_EVENTS = 25;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +66,20 @@ public class HomeActivity extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setCheckedItem(R.id.nav_feed);
         navigationView.setNavigationItemSelectedListener(this);
+
+        View header = navigationView.getHeaderView(0);
+
+        TextView mainUserEmail = (TextView) header.findViewById(R.id.tv_main_user_email);
+        TextView mainUserName = (TextView) header.findViewById(R.id.tv_main_user_name);
+        mainUserEmail.setText(prefUserEmail);
+        mainUserName.setText(prefUserName);
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.home_fragment_container,
+                        MainFeedFragment.newInstance(prefUserEmail, String.valueOf(NUMBER_OF_EVENTS)))
+                .commit();
     }
 
     public static Context getContextOfApp(){
@@ -122,18 +140,15 @@ public class HomeActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        FragmentManager fragmentManager = getSupportFragmentManager();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-            fragmentManager.beginTransaction()
+        if (id == R.id.nav_feed) {
+            getSupportFragmentManager().beginTransaction()
                     .replace(R.id.home_fragment_container,
-                            MainFeedFragment.newInstance(prefUserEmail, "25"))
+                            MainFeedFragment.newInstance(prefUserEmail, String.valueOf(NUMBER_OF_EVENTS)))
                     .commit();
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_my_events) {
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_friends) {
 
         } else if (id == R.id.nav_logout) {
             logout();
@@ -172,7 +187,7 @@ public class HomeActivity extends AppCompatActivity
 
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.home_fragment_container,
-                                MainFeedFragment.newInstance(prefUserEmail, "25"))
+                                MainFeedFragment.newInstance(prefUserEmail, String.valueOf(NUMBER_OF_EVENTS)))
                         .commitAllowingStateLoss();
                         //.commit();
                 Log.w("ACT Result", "Got a result.");
