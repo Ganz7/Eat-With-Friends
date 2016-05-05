@@ -13,6 +13,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +27,9 @@ public class HomeActivity extends AppCompatActivity
 
     private static Context contextOfApp;
     private static FragmentManager fManager;
+
+    // Request Codes
+    private static int CREATE_ACTIVITY_RESULT  = 10;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +48,7 @@ public class HomeActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Intent addEvent = new Intent(HomeActivity.this, CreateEvent.class);
-                startActivity(addEvent);
+                startActivityForResult(addEvent, CREATE_ACTIVITY_RESULT);
             }
         });
 
@@ -160,6 +164,26 @@ public class HomeActivity extends AppCompatActivity
         loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(loginIntent);
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CREATE_ACTIVITY_RESULT) {
+            if (resultCode == RESULT_OK) {
+
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.home_fragment_container,
+                                MainFeedFragment.newInstance(prefUserEmail, "25"))
+                        .commitAllowingStateLoss();
+                        //.commit();
+                Log.w("ACT Result", "Got a result.");
+            }
+            else{
+                Log.w("ACT Result", "Got a result. Code is not OK.");
+            }
+        }
+    }
+
+
     @Override
     public void onFragmentInteraction(Uri uri) {
         //Empty for now

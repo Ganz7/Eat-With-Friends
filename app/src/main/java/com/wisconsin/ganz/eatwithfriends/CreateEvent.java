@@ -123,8 +123,8 @@ public class CreateEvent extends AppCompatActivity {
                 setUpPlacePicker();
             }
             else{
+                setResult(RESULT_CANCELED);
                 finish();
-                // Or maybe not?
             }
         }
     }
@@ -394,9 +394,9 @@ public class CreateEvent extends AppCompatActivity {
             boolean isSuccess = processResponse(response);
             progressDialog.dismiss();
             if(isSuccess) {
-                // Finish up here
-                // Update feed?
-                // Make feed refresh?
+                Intent data = new Intent();
+                data.putExtra("STATUS", "SUCCESS");
+                setResult(RESULT_OK, data);
                 finish();
             }
         }

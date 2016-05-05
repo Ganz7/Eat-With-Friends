@@ -75,7 +75,6 @@ public class EventListCursorAdapter extends CursorAdapter {
             ListView listView = (ListView) parentRow.getParent();
             final int position = listView.getPositionForView(parentRow);
             final long chosen_ID = listView.getItemIdAtPosition(position);
-            Toast.makeText(v.getContext(), "Position: "+chosen_ID, Toast.LENGTH_SHORT).show();
 
             Button button = (Button) v;
             // User is going now. So request has been made to mark as not-going.
