@@ -29,7 +29,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
-import java.util.Locale;
 
 /***
  * Custom Cursor Adapter for Event List
@@ -61,8 +60,10 @@ public class EventListCursorAdapter extends CursorAdapter {
     View.OnClickListener placeButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            String uri = String.format(Locale.ENGLISH, "geo:0,0?q=%f", Uri.encode((String)v.getTag()));
+            //String uri = String.format(Locale.ENGLISH, "geo:0,0?q= " + Uri.encode((String)v.getTag()));
+            String uri = "geo:0,0?q=" + Uri.encode((String)v.getTag(), "UTF-8");
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             HomeActivity.getContextOfApp().startActivity(intent);
         }
     };
