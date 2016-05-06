@@ -228,7 +228,7 @@ public class CreateEvent extends AppCompatActivity {
             Toast.makeText(this, "Please fill in all the fields", Toast.LENGTH_LONG).show();
             return;
         }*/
-        
+
         if(location.equals("Where are you eating?") || date.equals("Date?") ||
                 start_time.equals("Start Time?") || end_time.equals("End Time?")){
             Toast.makeText(this, "Please fill in all the fields", Toast.LENGTH_LONG).show();
