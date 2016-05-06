@@ -9,4 +9,81 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.wisconsin.ganz.eatwithfriends.EventDetailsActivity">
 
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Location"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif-light"
+        android:id="@+id/tv_location"
+        android:layout_marginTop="10sp"
+        android:layout_toLeftOf="@+id/iv_location"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Some random information."
+        android:layout_marginTop="5sp"
+        android:id="@+id/tv_address"
+        android:layout_below="@+id/tv_location"
+        android:textSize="15sp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_time"
+        android:text="Time to Time"
+        android:layout_below="@+id/tv_address"
+        android:textSize="16sp"
+        android:layout_marginTop="30sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Date"
+        android:layout_below="@+id/tv_time"
+        android:paddingTop="10sp"
+        android:id="@+id/tv_date"
+        android:textSize="14sp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="DETAILS"
+        android:textSize="13sp"
+        android:id="@+id/tv_info"
+        android:layout_below="@+id/tv_date"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="25dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Some random information."
+        android:layout_marginTop="10sp"
+        android:id="@+id/tv_info_content"
+        android:layout_below="@+id/tv_info"
+        android:textSize="15sp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="GOING"
+        android:textSize="13sp"
+        android:id="@+id/tv_going"
+        android:layout_below="@+id/tv_info_content"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="25dp"/>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/friend_list"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/tv_going">
+
+    </ListView>
+
 </RelativeLayout>

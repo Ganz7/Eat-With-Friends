@@ -2,6 +2,7 @@ package com.wisconsin.ganz.eatwithfriends;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.database.MatrixCursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -353,6 +354,31 @@ public class MainFeedFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
+    public void parseDetailsAndDisplay(String response){
+        mDetailsTask = null;
+        progressDialog.dismiss();
+
+        JSONObject result = null;
+        JSONObject details = null;
+        JSONArray list = null;
+        Intent detailsIntent = new Intent(getActivity(), EventDetailsActivity.class);
+
+        try {
+            result = new JSONObject(response);
+            details = result.getJSONObject("event_details");
+            list = result.getJSONArray("user_list");
+
+            detailsIntent.putExtra("event_location", details.getString("event_location"));
+            detailsIntent.putExtra("event_info", details.getString("event_info"));
+
+            detailsIntent.putExtra("response", response);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        startActivity(detailsIntent);
+    }
+
     public class DetailsFetchTask extends AsyncTask<Void, Void, String> {
 
         private final long mEventID;
@@ -404,11 +430,12 @@ public class MainFeedFragment extends Fragment {
         @Override
         protected void onPostExecute(final String response) {
             if(!hasError(response)){
-                //parseStringAndPopulateList(response);
-                Toast.makeText(getActivity(), response, Toast.LENGTH_SHORT).show();
+                parseDetailsAndDisplay(response);
             }
-            mDetailsTask = null;
-            progressDialog.dismiss();
+            else {
+                mDetailsTask = null;
+                progressDialog.dismiss();
+            }
         }
 
         @Override
