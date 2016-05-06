@@ -21,7 +21,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class HomeActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, MainFeedFragment.OnFragmentInteractionListener{
+        implements NavigationView.OnNavigationItemSelectedListener, MainFeedFragment.OnFragmentInteractionListener,
+            FriendListFragment.OnFragmentInteractionListener{
 
     private static String prefUserEmail;
     private static String prefUserName;

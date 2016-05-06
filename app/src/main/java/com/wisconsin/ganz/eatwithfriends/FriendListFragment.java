@@ -51,7 +51,7 @@ public class FriendListFragment extends Fragment {
 
     // View and Adapter Objects
     private ListView friendListView;
-    private EventListCursorAdapter friendsAdapter;
+    private FriendListCursorAdapter friendsAdapter;
 
 
     /**
@@ -81,7 +81,7 @@ public class FriendListFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_friend_list, container, false);
-
+        friendListView = (ListView) view.findViewById(R.id.friend_list);
         setUpProgressDialog();
         getFriends();
 
@@ -126,7 +126,7 @@ public class FriendListFragment extends Fragment {
     private void parseStringAndPopulateList(String response){
         JSONObject result = null;
         JSONArray jsonArray = null;
-        String[] columns = new String[] {"user_name", "user_email"};
+        String[] columns = new String[] {"_id","user_name", "user_email"};
         MatrixCursor matrixCursor = new MatrixCursor(columns);
 
         try {
@@ -149,7 +149,7 @@ public class FriendListFragment extends Fragment {
         }
 
         if (matrixCursor != null && matrixCursor.moveToFirst()) {
-            friendsAdapter = new EventListCursorAdapter(getActivity(), matrixCursor, 0);
+            friendsAdapter = new FriendListCursorAdapter(getActivity(), matrixCursor, 0);
             friendListView.setAdapter(friendsAdapter);
         }
     }
