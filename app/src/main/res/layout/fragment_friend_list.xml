@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.wisconsin.ganz.eatwithfriends.FriendListFragment"
-    android:background="#FFF8E1">
+    android:background="@color/bgWhite">
 
     <ListView
         android:layout_width="match_parent"
