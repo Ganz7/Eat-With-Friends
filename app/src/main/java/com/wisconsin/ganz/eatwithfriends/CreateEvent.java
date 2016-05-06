@@ -49,9 +49,9 @@ public class CreateEvent extends AppCompatActivity {
 
     //private EditText et_location;
     private Button bu_location;
-    private EditText et_date;
-    private EditText et_start_time;
-    private EditText et_end_time;
+    private Button et_date;
+    private Button et_start_time;
+    private Button et_end_time;
     private EditText et_info;
 
     // Keep Track of Server Add Task
@@ -164,9 +164,9 @@ public class CreateEvent extends AppCompatActivity {
     private void initializeViewsAndSetListeners(){
         //et_location = (EditText) findViewById(R.id.et_location);
         bu_location = (Button) findViewById(R.id.et_location);
-        et_date = (EditText) findViewById(R.id.et_date);
-        et_start_time = (EditText) findViewById(R.id.et_start_time);
-        et_end_time = (EditText) findViewById(R.id.et_end_time);
+        et_date = (Button) findViewById(R.id.et_date);
+        et_start_time = (Button) findViewById(R.id.et_start_time);
+        et_end_time = (Button) findViewById(R.id.et_end_time);
         et_info = (EditText) findViewById(R.id.et_info);
 
         // Set up the Progress Dialog object
@@ -188,7 +188,7 @@ public class CreateEvent extends AppCompatActivity {
      * Sets up TimePicker Dialog and handles onTimeSet events
      * @param et EditText for which time picker dialog needs to be set up
      */
-    public void setTimePickerListenerHelper(final EditText et){
+    public void setTimePickerListenerHelper(final Button et){
         et.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
