@@ -16,7 +16,7 @@
         android:paddingBottom="15dp"
         android:paddingRight="15dp"
         android:background="@drawable/card_background_selector"
-        android:descendantFocusability="afterDescendants">
+        android:descendantFocusability="blocksDescendants">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"

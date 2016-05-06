@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -51,6 +52,7 @@ public class MainFeedFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     private EventsFetchTask mEventsTask = null;
+    private DetailsFetchTask mDetailsTask = null;
 
     // View and Adapter Objects
     private ListView eventListView;
@@ -100,10 +102,24 @@ public class MainFeedFragment extends Fragment {
         eventListView.addHeaderView(new View(getActivity()));
         eventListView.addFooterView(new View(getActivity()));
 
+        eventListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                getEventDetails(id);
+            }
+        });
+
         setUpProgressDialog();
         getEvents();
 
         return view;
+    }
+
+    public void getEventDetails(long id){
+        progressDialog.show();
+
+        mDetailsTask = new DetailsFetchTask(id);
+        mDetailsTask.execute((Void) null);
     }
 
     public void setUpProgressDialog(){
@@ -140,7 +156,6 @@ public class MainFeedFragment extends Fragment {
 
         mEventsTask = new EventsFetchTask(mUserEmail, mRowCount);
         mEventsTask.execute((Void) null);
-
     }
 
     /**
@@ -336,5 +351,84 @@ public class MainFeedFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public class DetailsFetchTask extends AsyncTask<Void, Void, String> {
+
+        private final long mEventID;
+
+        DetailsFetchTask(long id) {
+            mEventID = id;
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            try {
+                Uri uri = new Uri.Builder()
+                        .scheme("https")
+                        .authority(getString(R.string.host_name))
+                        .path("events/details")
+                        .appendQueryParameter("event_id", String.valueOf(mEventID))
+                        .build();
+
+                URL url = new URL(uri.toString());
+                Log.w("URI", uri.toString());
+
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.setConnectTimeout(20000);
+                urlConnection.setReadTimeout(20000);
+
+                if (urlConnection.getResponseCode() == 200 || urlConnection.getResponseCode() == 201) {
+                    BufferedReader br = new BufferedReader(new InputStreamReader
+                            (urlConnection.getInputStream()));
+                    StringBuilder sb = new StringBuilder();
+                    String line;
+                    while ((line = br.readLine()) != null) {
+                        sb.append(line + "\n");
+                    }
+                    br.close();
+                    Log.w("URL", "Response:" + sb.toString());
+                    return sb.toString();
+                }
+            } catch (MalformedURLException | ProtocolException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            // If response code is not 2xx or if something else wen't wrong.
+            return "{\"error\":\"Something wen't wrong. Try again.\"}";
+        }
+
+        @Override
+        protected void onPostExecute(final String response) {
+            if(!hasError(response)){
+                //parseStringAndPopulateList(response);
+                Toast.makeText(getActivity(), response, Toast.LENGTH_SHORT).show();
+            }
+            mDetailsTask = null;
+            progressDialog.dismiss();
+        }
+
+        @Override
+        protected void onCancelled() {
+            mDetailsTask = null;
+            progressDialog.dismiss();
+        }
+
+        protected boolean hasError(String response){
+            try {
+                JSONObject jsonObject = new JSONObject(response);
+                if(jsonObject.has("error")) {
+                    String errorMessage = "Not able to fetch events. " + jsonObject.getString("error");
+                    Toast.makeText(getActivity().getApplicationContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
     }
 }
