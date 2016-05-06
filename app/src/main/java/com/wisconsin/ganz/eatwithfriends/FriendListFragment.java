@@ -126,7 +126,7 @@ public class FriendListFragment extends Fragment {
     private void parseStringAndPopulateList(String response){
         JSONObject result = null;
         JSONArray jsonArray = null;
-        String[] columns = new String[] {"user_email", "user_name"};
+        String[] columns = new String[] {"user_name", "user_email"};
         MatrixCursor matrixCursor = new MatrixCursor(columns);
 
         try {
@@ -153,6 +153,8 @@ public class FriendListFragment extends Fragment {
             friendListView.setAdapter(friendsAdapter);
         }
     }
+
+
 
     public class FriendsFetchTask extends AsyncTask<Void, Void, String> {
 

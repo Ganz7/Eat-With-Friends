@@ -149,6 +149,10 @@ public class HomeActivity extends AppCompatActivity
         } else if (id == R.id.nav_my_events) {
 
         } else if (id == R.id.nav_friends) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.home_fragment_container,
+                            FriendListFragment.newInstance())
+                    .commit();
 
         } else if (id == R.id.nav_logout) {
             logout();

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="0dp"
+    android:paddingRight="0dp"
+    android:descendantFocusability="beforeDescendants">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="80dp"
+                android:id="@+id/iv_friend_pic"
+                android:src="@drawable/ic_account_circle_black_36dp"
+                android:layout_alignParentStart="true"
+                android:paddingRight="20sp"
+                android:paddingLeft="15sp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
+                android:textSize="20sp"
+                android:text="Ganesh Kumar"
+                android:id="@+id/tv_userName"
+                android:layout_toEndOf="@+id/iv_friend_pic"
+                android:paddingTop="15dp"
+                android:textColor="#ff5577"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Email"
+                android:layout_below="@+id/tv_userName"
+                android:layout_toEndOf="@+id/iv_friend_pic"
+                android:paddingTop="5sp"
+                android:id="@+id/tv_userEmail"
+                android:textSize="15sp"/>
+
+        </RelativeLayout>
+    </LinearLayout>
+</FrameLayout>
