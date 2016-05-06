@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.wisconsin.ganz.eatwithfriends.FriendListFragment">
+    tools:context="com.wisconsin.ganz.eatwithfriends.FriendListFragment"
+    android:background="#FFF8E1">
 
     <ListView
         android:layout_width="match_parent"
