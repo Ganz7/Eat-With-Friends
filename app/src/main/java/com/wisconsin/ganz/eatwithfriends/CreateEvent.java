@@ -223,7 +223,14 @@ public class CreateEvent extends AppCompatActivity {
 
         // Check if the fields are filled in
         // TODO: Make toast notifications individually
+        /*
         if(location.length() == 0 || date.length() == 0 || start_time.length() == 0 || end_time.length() == 0){
+            Toast.makeText(this, "Please fill in all the fields", Toast.LENGTH_LONG).show();
+            return;
+        }*/
+        
+        if(location.equals("Where are you eating?") || date.equals("Date?") ||
+                start_time.equals("Start Time?") || end_time.equals("End Time?")){
             Toast.makeText(this, "Please fill in all the fields", Toast.LENGTH_LONG).show();
             return;
         }
