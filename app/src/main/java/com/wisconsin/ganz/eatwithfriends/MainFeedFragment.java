@@ -370,6 +370,9 @@ public class MainFeedFragment extends Fragment {
 
             detailsIntent.putExtra("event_location", details.getString("event_location"));
             detailsIntent.putExtra("event_info", details.getString("event_info"));
+            detailsIntent.putExtra("event_start_time", getTime(details.getString("event_start_time")));
+            detailsIntent.putExtra("event_end_time", getTime(details.getString("event_end_time")));
+            detailsIntent.putExtra("event_start_date", getDate(details.getString("event_start_time")));
 
             detailsIntent.putExtra("response", response);
 

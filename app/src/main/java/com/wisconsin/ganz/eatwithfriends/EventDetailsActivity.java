@@ -32,12 +32,20 @@ public class EventDetailsActivity extends AppCompatActivity {
         TextView location = (TextView) findViewById(R.id.tv_location);
         TextView address = (TextView) findViewById(R.id.tv_address);
         TextView info = (TextView) findViewById(R.id.tv_info_content);
+        TextView time = (TextView) findViewById(R.id.tv_time);
+        TextView date = (TextView) findViewById(R.id.tv_date);
 
         String[] placeInfo = detailsIntent.getStringExtra("event_location").split("\\|");
 
         location.setText(placeInfo[0]);
         address.setText(placeInfo[1]);
         info.setText(detailsIntent.getStringExtra("event_info"));
+
+        String timeString = detailsIntent.getStringExtra("event_start_time") + " to "
+                + detailsIntent.getStringExtra("event_end_time");
+        time.setText(timeString);
+
+        date.setText(detailsIntent.getStringExtra("event_start_date"));
 
         setList(detailsIntent.getStringExtra("response"));
     }
