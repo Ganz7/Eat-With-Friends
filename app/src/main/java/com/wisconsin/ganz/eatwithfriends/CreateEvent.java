@@ -251,6 +251,10 @@ public class CreateEvent extends AppCompatActivity {
             Toast.makeText(this, "Start time cannot be later than end time", Toast.LENGTH_LONG).show();
             return;
         }
+        if(startDate.before(new Date())){
+            Toast.makeText(this, "Event cannot be in the past.", Toast.LENGTH_LONG).show();
+            return;
+        }
 
         // Set the formatter's time zone to UTC to convert the date object to this timezone
         formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -258,7 +262,10 @@ public class CreateEvent extends AppCompatActivity {
         String f_start_time = formatter.format(startDate);
         String f_end_time = formatter.format(endDate);
 
-        addEvent(location, date, f_start_time, f_end_time, info);
+        //addEvent(location, date, f_start_time, f_end_time, info);
+
+        // Temporary workaround for now
+        addEvent(location, date, startDateString, endDateString, info);
     }
 
     /**
