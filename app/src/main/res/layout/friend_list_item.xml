@@ -34,7 +34,7 @@
                 android:id="@+id/tv_userName"
                 android:layout_toEndOf="@+id/iv_friend_pic"
                 android:paddingTop="15dp"
-                android:textColor="#ff5577"/>
+                android:textColor="@color/mainPink"/>
 
             <TextView
                 android:layout_width="wrap_content"

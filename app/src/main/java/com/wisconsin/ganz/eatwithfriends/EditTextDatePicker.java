@@ -4,8 +4,8 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
 
 import java.util.Calendar;
 
@@ -13,7 +13,7 @@ import java.util.Calendar;
  * Class to handle listen events on a EditText and call DatePicker
  */
 public class EditTextDatePicker implements View.OnClickListener, DatePickerDialog.OnDateSetListener {
-    EditText editText;
+    Button editText;
     private int day;
     private int month;
     private int year;
@@ -21,7 +21,7 @@ public class EditTextDatePicker implements View.OnClickListener, DatePickerDialo
 
     public EditTextDatePicker(Context context, int editTextViewID) {
         Activity activity = (Activity) context;
-        this.editText = (EditText) activity.findViewById(editTextViewID);
+        this.editText = (Button) activity.findViewById(editTextViewID);
         this.editText.setOnClickListener(this);
         this.context = context;
     }

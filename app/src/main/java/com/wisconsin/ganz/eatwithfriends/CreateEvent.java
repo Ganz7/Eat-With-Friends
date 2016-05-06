@@ -49,9 +49,9 @@ public class CreateEvent extends AppCompatActivity {
 
     //private EditText et_location;
     private Button bu_location;
-    private EditText et_date;
-    private EditText et_start_time;
-    private EditText et_end_time;
+    private Button et_date;
+    private Button et_start_time;
+    private Button et_end_time;
     private EditText et_info;
 
     // Keep Track of Server Add Task
@@ -164,9 +164,9 @@ public class CreateEvent extends AppCompatActivity {
     private void initializeViewsAndSetListeners(){
         //et_location = (EditText) findViewById(R.id.et_location);
         bu_location = (Button) findViewById(R.id.et_location);
-        et_date = (EditText) findViewById(R.id.et_date);
-        et_start_time = (EditText) findViewById(R.id.et_start_time);
-        et_end_time = (EditText) findViewById(R.id.et_end_time);
+        et_date = (Button) findViewById(R.id.et_date);
+        et_start_time = (Button) findViewById(R.id.et_start_time);
+        et_end_time = (Button) findViewById(R.id.et_end_time);
         et_info = (EditText) findViewById(R.id.et_info);
 
         // Set up the Progress Dialog object
@@ -188,7 +188,7 @@ public class CreateEvent extends AppCompatActivity {
      * Sets up TimePicker Dialog and handles onTimeSet events
      * @param et EditText for which time picker dialog needs to be set up
      */
-    public void setTimePickerListenerHelper(final EditText et){
+    public void setTimePickerListenerHelper(final Button et){
         et.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -223,7 +223,14 @@ public class CreateEvent extends AppCompatActivity {
 
         // Check if the fields are filled in
         // TODO: Make toast notifications individually
+        /*
         if(location.length() == 0 || date.length() == 0 || start_time.length() == 0 || end_time.length() == 0){
+            Toast.makeText(this, "Please fill in all the fields", Toast.LENGTH_LONG).show();
+            return;
+        }*/
+
+        if(location.equals("Where are you eating?") || date.equals("Date?") ||
+                start_time.equals("Start Time?") || end_time.equals("End Time?")){
             Toast.makeText(this, "Please fill in all the fields", Toast.LENGTH_LONG).show();
             return;
         }
@@ -251,6 +258,10 @@ public class CreateEvent extends AppCompatActivity {
             Toast.makeText(this, "Start time cannot be later than end time", Toast.LENGTH_LONG).show();
             return;
         }
+        if(startDate.before(new Date())){
+            Toast.makeText(this, "Event cannot be in the past.", Toast.LENGTH_LONG).show();
+            return;
+        }
 
         // Set the formatter's time zone to UTC to convert the date object to this timezone
         formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -258,7 +269,10 @@ public class CreateEvent extends AppCompatActivity {
         String f_start_time = formatter.format(startDate);
         String f_end_time = formatter.format(endDate);
 
-        addEvent(location, date, f_start_time, f_end_time, info);
+        //addEvent(location, date, f_start_time, f_end_time, info);
+
+        // Temporary workaround for now
+        addEvent(location, date, startDateString, endDateString, info);
     }
 
     /**

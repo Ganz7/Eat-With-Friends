@@ -14,10 +14,11 @@
 
     <ImageView
         android:layout_width="wrap_content"
-        android:layout_height="40sp"
+        android:layout_height="25sp"
         android:id="@+id/iv_location"
         android:src="@drawable/ic_location_on_black_36dp"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="5sp"/>
 
     <!--
     <EditText
@@ -30,17 +31,20 @@
 
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="40sp"
-        android:text="WHERE ARE YOU EATING?"
+        android:text="Where are you eating?"
         style="?attr/borderlessButtonStyle"
+        android:fontFamily="sans-serif-light"
         android:id="@+id/et_location"
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@+id/iv_location"
         android:textSize="15sp"
         android:gravity="center_vertical"
-        android:textColor="#1188AA"/>
+        android:textColor="@color/mainPink"
+        android:textAllCaps="false"/>
 
+    <!--
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -50,8 +54,32 @@
         android:layout_below="@+id/et_location"
         android:hint="Choose date"
         android:layout_marginTop="15sp"
-        android:focusable="false"/>
+        android:focusable="false"/>-->
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="25sp"
+        android:id="@+id/iv_date"
+        android:layout_below="@+id/iv_location"
+        android:layout_marginTop="21sp"
+        android:src="@drawable/ic_date_range_black_36dp"
+        android:layout_alignParentStart="true" />
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="40sp"
+        android:text="Date?"
+        style="?attr/borderlessButtonStyle"
+        android:fontFamily="sans-serif-light"
+        android:layout_marginTop="5sp"
+        android:id="@+id/et_date"
+        android:layout_toEndOf="@+id/iv_location"
+        android:layout_below="@+id/et_location"
+        android:textSize="15sp"
+        android:gravity="center_vertical"
+        android:textColor="@color/mainPink"
+        android:textAllCaps="false"/>
+
+    <!--
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -61,9 +89,33 @@
         android:layout_below="@+id/et_date"
         android:layout_alignParentStart="true"
         android:hint="Start Time"
-        android:focusable="false"/>
+        android:focusable="false"/>-->
 
-    <EditText
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="25sp"
+        android:id="@+id/iv_time"
+        android:layout_below="@+id/iv_date"
+        android:src="@drawable/ic_schedule_black_36dp"
+        android:layout_marginTop="20sp"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="40sp"
+        android:text="Start Time?"
+        style="?attr/borderlessButtonStyle"
+        android:fontFamily="sans-serif-light"
+        android:layout_marginTop="5sp"
+        android:id="@+id/et_start_time"
+        android:layout_toEndOf="@+id/iv_location"
+        android:layout_below="@+id/et_date"
+        android:textSize="15sp"
+        android:gravity="center_vertical"
+        android:textColor="@color/mainPink"
+        android:textAllCaps="false"/>
+
+    <!--<EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="time"
@@ -72,17 +124,31 @@
         android:layout_below="@+id/et_start_time"
         android:layout_alignParentStart="true"
         android:hint="End Time"
-        android:focusable="false"/>
+        android:focusable="false"/>-->
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="40sp"
+        android:text="End Time?"
+        style="?attr/borderlessButtonStyle"
+        android:fontFamily="sans-serif-light"
+        android:id="@+id/et_end_time"
+        android:layout_toEndOf="@+id/iv_location"
+        android:layout_below="@+id/et_start_time"
+        android:textSize="15sp"
+        android:gravity="center_vertical"
+        android:textColor="@color/mainPink"
+        android:textAllCaps="false"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Additional Information"
+        android:text="Additional Details"
         android:textSize="15sp"
         android:id="@+id/tv_info"
         android:layout_below="@+id/et_end_time"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="30dp"/>
 
     <EditText
         android:layout_width="match_parent"

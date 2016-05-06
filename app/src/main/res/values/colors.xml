@@ -12,9 +12,14 @@
     <color name="offWhite">#EFEFEF</color>
     <color name="offoffWhite">#BCBCBC</color>
 
-    <color name="mainPink">#ff5577</color>
+    <color name="mainPink">#F44336</color>
+    <color name="lightPink">#EF9A9A</color>
 
     <color name="secondaryBlue">#90CAF9</color>
+    <color name="secondaryYellow">#FFE082</color>
+
+    <color name="bgWhite">#FFF8E1</color>
+    <color name="fgWhite">#FFFBF0</color>
 
     <color name="materialGreen1">#00C853</color>
 </resources>
