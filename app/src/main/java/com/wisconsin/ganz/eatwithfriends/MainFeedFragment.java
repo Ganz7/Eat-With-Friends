@@ -113,6 +113,8 @@ public class MainFeedFragment extends Fragment {
         setUpProgressDialog();
         getEvents();
 
+        ((HomeActivity) getActivity()).setActionBarTitle("Feed");
+
         return view;
     }
 
@@ -452,7 +454,7 @@ public class MainFeedFragment extends Fragment {
                 JSONObject jsonObject = new JSONObject(response);
                 if(jsonObject.has("error")) {
                     String errorMessage = "Not able to fetch events. " + jsonObject.getString("error");
-                    Toast.makeText(getActivity().getApplicationContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_SHORT).show();
                     return true;
                 }
             } catch (JSONException e) {

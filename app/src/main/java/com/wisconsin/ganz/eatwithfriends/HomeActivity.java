@@ -82,7 +82,9 @@ public class HomeActivity extends AppCompatActivity
                         MainFeedFragment.newInstance(prefUserEmail, String.valueOf(NUMBER_OF_EVENTS)))
                 .commit();
     }
-
+    public void setActionBarTitle(String title) {
+        getSupportActionBar().setTitle(title);
+    }
     public static Context getContextOfApp(){
         return contextOfApp;
     }

@@ -85,6 +85,9 @@ public class FriendListFragment extends Fragment {
         setUpProgressDialog();
         getFriends();
 
+        ((HomeActivity) getActivity())
+                .setActionBarTitle("Friends List");
+
         return view;
     }
 

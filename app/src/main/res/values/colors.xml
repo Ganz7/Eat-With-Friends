@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
+    <!--<color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#FF4081</color>-->
+
+    <color name="colorPrimary">#EF5350</color>
+    <color name="colorPrimaryDark">#D32F2F</color>
+    <!--<color name="colorAccent">#90CAF9</color>-->
+    <color name="colorAccent">#FFCA28</color>
 
     <color name="offWhite">#EFEFEF</color>
     <color name="offoffWhite">#BCBCBC</color>
+
+    <color name="mainPink">#ff5577</color>
+
+    <color name="secondaryBlue">#90CAF9</color>
 
     <color name="materialGreen1">#00C853</color>
 </resources>

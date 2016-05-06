@@ -34,9 +34,9 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="2dp"
+                android:layout_height="1dp"
                 android:id="@+id/line_seperator"
-                android:background="#00E676"
+                android:background="#90A4AE"
                 android:layout_below="@+id/tv_userName" />
 
             <TextView
