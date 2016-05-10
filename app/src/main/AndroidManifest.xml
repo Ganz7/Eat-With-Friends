@@ -51,6 +51,13 @@
                 android:value="com.wisconsin.ganz.eatwithfriends.HomeActivity" />
         </activity>
         <activity android:name=".EventDetailsActivity"></activity>
+
+        <receiver android:name=".AlarmNotificationReceiver">
+            <intent-filter>
+                <action android:name="ganz.ewf.action.DISPLAY_NOTIFICATION" />
+                <category android:name="ganz.ewf.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

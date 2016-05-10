@@ -1,5 +1,7 @@
 package com.wisconsin.ganz.eatwithfriends;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,6 +21,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.Calendar;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, MainFeedFragment.OnFragmentInteractionListener,
@@ -77,6 +81,8 @@ public class HomeActivity extends AppCompatActivity
         mainUserEmail.setText(prefUserEmail);
         mainUserName.setText(prefUserName);
 
+        setAlarm();
+
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.home_fragment_container,
                         MainFeedFragment.newInstance(prefUserEmail, String.valueOf(NUMBER_OF_EVENTS)))
@@ -85,6 +91,7 @@ public class HomeActivity extends AppCompatActivity
     public void setActionBarTitle(String title) {
         getSupportActionBar().setTitle(title);
     }
+
     public static Context getContextOfApp(){
         return contextOfApp;
     }
@@ -94,6 +101,24 @@ public class HomeActivity extends AppCompatActivity
     public static String getPrefUserName() {return prefUserName;}
     public static String getUserPrefEmail(){
         return prefUserEmail;
+    }
+
+
+    /*
+    *  Set Sample Alarm
+    * */
+    public void setAlarm(){
+        int EVENT_NOTIFICATION_CODE = 21; //temporary
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+        Intent notificationIntent = new Intent("ganz.ewf.action.DISPLAY_NOTIFICATION");
+        notificationIntent.addCategory("ganz.ewf.category.DEFAULT");
+
+        PendingIntent broadcast = PendingIntent.getBroadcast(this, EVENT_NOTIFICATION_CODE, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.SECOND, 15);
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), broadcast);
     }
 
     /**
