@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 
@@ -21,13 +22,22 @@ public class AlarmNotificationReceiver extends BroadcastReceiver {
                         .setContentTitle("Eat With Friends Event!")
                         .setContentText(notificationText);
 
+        String uri = "geo:0,0?q=" + Uri.encode(intent.getStringExtra("EVENT_LOCATION_NAME")
+                + " " + intent.getStringExtra("EVENT_LOCATION_ADDRESS")
+                , "UTF-8");
+        Intent mapsIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+        mapsIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
         Intent activityDetailsIntent = new Intent(context, MainEmptyActivity.class); // temporary
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
         // Adds the back stack for the Intent (but not the Intent itself)
         stackBuilder.addParentStack(MainEmptyActivity.class);
         // Adds the Intent that starts the Activity to the top of the stack
-        stackBuilder.addNextIntent(activityDetailsIntent);
+        //stackBuilder.addNextIntent(activityDetailsIntent);
+
+        // Add Maps Intent
+        stackBuilder.addNextIntent(mapsIntent);
 
         PendingIntent resultPendingIntent =
                 stackBuilder.getPendingIntent(

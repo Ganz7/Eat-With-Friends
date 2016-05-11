@@ -410,6 +410,7 @@ public class CreateEvent extends AppCompatActivity {
             boolean isSuccess = processResponse(response);
             progressDialog.dismiss();
             if(isSuccess) {
+                setAlarm(mStartTime, mLocation);
                 Intent data = new Intent();
                 data.putExtra("STATUS", "SUCCESS");
                 setResult(RESULT_OK, data);
@@ -424,19 +425,20 @@ public class CreateEvent extends AppCompatActivity {
         }
     }
 
-    public void setAlarm(String start_time){
+    public void setAlarm(String start_time, String location){
         int EVENT_NOTIFICATION_CODE = 21; //temporary
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
         Intent notificationIntent = new Intent("ganz.ewf.action.DISPLAY_NOTIFICATION");
         notificationIntent.addCategory("ganz.ewf.category.DEFAULT");
-        notificationIntent.putExtra("EVENT_ID", 5);
-        notificationIntent.putExtra("EVENT_LOCATION_NAME", "Chipotle");
-        notificationIntent.putExtra("EVENT_LOCATION_ADDRESS", "State Street Madison WI");
+        notificationIntent.putExtra("EVENT_ID", 1);
+        notificationIntent.putExtra("EVENT_LOCATION_NAME", location.split("\\|")[0]);
+        notificationIntent.putExtra("EVENT_LOCATION_ADDRESS", location.split("\\|")[1]);
 
         PendingIntent broadcast = PendingIntent.getBroadcast(this, EVENT_NOTIFICATION_CODE, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Calendar cal = Calendar.getInstance();
+        cal.setTimeZone(TimeZone.getDefault());
         start_time = start_time.replace("T", " ").split("\\.")[0];
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
