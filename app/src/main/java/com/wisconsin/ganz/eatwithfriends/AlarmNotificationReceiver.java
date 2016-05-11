@@ -13,11 +13,13 @@ public class AlarmNotificationReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
+        String notificationText = "Event at "
+                + intent.getStringExtra("EVENT_LOCATION_NAME") + " in 30 minutes";
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(R.drawable.ic_logo)
-                        .setContentTitle("My notification")
-                        .setContentText("Hello World!");
+                        .setContentTitle("Eat With Friends Event!")
+                        .setContentText(notificationText);
 
         Intent activityDetailsIntent = new Intent(context, MainEmptyActivity.class); // temporary
 

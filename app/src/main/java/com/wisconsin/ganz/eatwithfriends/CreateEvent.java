@@ -1,5 +1,7 @@
 package com.wisconsin.ganz.eatwithfriends;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
@@ -420,5 +422,31 @@ public class CreateEvent extends AppCompatActivity {
             mAddTask = null;
             progressDialog.dismiss();
         }
+    }
+
+    public void setAlarm(String start_time){
+        int EVENT_NOTIFICATION_CODE = 21; //temporary
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+        Intent notificationIntent = new Intent("ganz.ewf.action.DISPLAY_NOTIFICATION");
+        notificationIntent.addCategory("ganz.ewf.category.DEFAULT");
+        notificationIntent.putExtra("EVENT_ID", 5);
+        notificationIntent.putExtra("EVENT_LOCATION_NAME", "Chipotle");
+        notificationIntent.putExtra("EVENT_LOCATION_ADDRESS", "State Street Madison WI");
+
+        PendingIntent broadcast = PendingIntent.getBroadcast(this, EVENT_NOTIFICATION_CODE, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Calendar cal = Calendar.getInstance();
+        start_time = start_time.replace("T", " ").split("\\.")[0];
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            cal.setTime(sdf.parse(start_time));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        cal.add(Calendar.MINUTE, -30);
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), broadcast);
     }
 }
